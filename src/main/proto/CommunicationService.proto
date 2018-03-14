@@ -1,0 +1,20 @@
+syntax = "proto3";
+package com.example.grpc;
+
+// Request payload
+message TransferDataRequest {
+
+  string name = 1;
+
+  repeated string hobbies = 2;
+}
+
+message TransferDataResponse {
+  string communication = 1;
+}
+
+// Defining a Service, a Service can have multiple RPC operations
+service CommunicationService {
+  // Define a RPC operation
+  rpc communication(TransferDataRequest) returns (TransferDataResponse);
+}
