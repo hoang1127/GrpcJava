@@ -4,9 +4,11 @@ package com.example.grpc;
 // Request payload
 message TransferDataRequest {
 
-  string name = 1;
+  //string name = 1;
 
-  repeated string hobbies = 2;
+  //repeated string hobbies = 2;
+  string fromtimestamp = 1;
+  string totimestamp = 2;
 }
 
 message TransferDataResponse {

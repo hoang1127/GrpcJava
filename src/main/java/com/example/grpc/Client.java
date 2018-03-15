@@ -14,11 +14,12 @@ public class Client
       CommunicationServiceGrpc.CommunicationServiceBlockingStub stub = CommunicationServiceGrpc.newBlockingStub(channel);
       CommunicationServiceOuterClass.TransferDataRequest request =
       CommunicationServiceOuterClass.TransferDataRequest.newBuilder()
-          .setName("Leader Node ")
+          .setFromtimestamp("2018/01/01")
+          .setTotimestamp("2018/01/07")
           .build();
 
       // Finally, make the call using the stub
-      CommunicationServiceOuterClass.TransferDataResponse response = 
+      CommunicationServiceOuterClass.TransferDataResponse response =
         stub.communication(request);
 
       System.out.println(response);
