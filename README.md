@@ -21,6 +21,8 @@ data: "{ \"_id\" : { \"$oid\" : \"5aab742ca9fec20449442856\"} , \"date\" : { \"$
 ---------------------------------------------------------
 
 TODO LIST:
+- Update proto file with the class one (in Canvas), and update the code to send/receive
+using this proto
 - Right now, the return result is json string format, need to get the format from
 class and convert it to them
 - Use and save real data
