@@ -13,6 +13,7 @@ message TransferDataRequest {
 
 message TransferDataResponse {
   string communication = 1;
+  string data = 2;
 }
 
 // Defining a Service, a Service can have multiple RPC operations
