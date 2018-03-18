@@ -12,15 +12,23 @@ public class Client
         .build();
 
       CommunicationServiceGrpc.CommunicationServiceBlockingStub stub = CommunicationServiceGrpc.newBlockingStub(channel);
-      CommunicationServiceOuterClass.TransferDataRequest request =
-      CommunicationServiceOuterClass.TransferDataRequest.newBuilder()
-          .setFromtimestamp("2018/01/01")
-          .setTotimestamp("2018/01/07")
+      //CommunicationServiceOuterClass.TransferDataRequest request =
+      //CommunicationServiceOuterClass.TransferDataRequest.newBuilder()
+      //    .setFromtimestamp("2018/01/01")
+      //    .setTotimestamp("2018/01/07")
+      //    .build();
+
+      // TODO: Testing code for new .proto file
+      CommunicationServiceOuterClass.GetRequest request =
+      CommunicationServiceOuterClass.GetRequest.newBuilder()
+          .setGetQuery("FROM 2018/01/01 TO 2018/01/07")
           .build();
 
       // Finally, make the call using the stub
+      //CommunicationServiceOuterClass.TransferDataResponse response =
+      //  stub.communication(request);
       CommunicationServiceOuterClass.TransferDataResponse response =
-        stub.communication(request);
+        stub.communication2(request);
 
       System.out.println(response);
 

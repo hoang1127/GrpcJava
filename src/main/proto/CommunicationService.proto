@@ -147,4 +147,5 @@ message TransferDataResponse {
 service CommunicationService {
   // Define a RPC operation
   rpc communication(TransferDataRequest) returns (TransferDataResponse);
+  rpc communication2(GetRequest) returns (TransferDataResponse);
 }

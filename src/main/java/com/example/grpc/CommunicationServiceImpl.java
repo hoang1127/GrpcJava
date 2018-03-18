@@ -70,4 +70,58 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
     // Done. Call onCompleted.
     responseObserver.onCompleted();
   }
+
+  @Override
+  public void communication2(CommunicationServiceOuterClass.GetRequest request,
+        StreamObserver<CommunicationServiceOuterClass.TransferDataResponse> responseObserver) {
+  // CommunicationRequest has toString auto-generated.
+    System.out.println(request);
+
+    // Execute the request
+    System.out.println("Receive request query " + request.getGetQuery());
+
+    System.out.println("Go to database to get all the requested file.....");
+
+    // TODO: Database code here
+    // TODO: currently, data return is a string representation of mongo json object
+    // TODO: need to convert this to either raw data or other kind of data
+    // TODO: depends on the requirement
+    // Should create new class instead of putting everything here
+    MongoClient mgClient = new MongoClient("localhost", 27017);
+    DB db = mgClient.getDB("cmpe275");
+    System.out.println("Connected to database successfully");
+
+    // Now get the date from the request
+    Date from = new Date("2018/01/01");
+    Date to = new Date("2018/01/07");
+    QueryBuilder qb = new QueryBuilder();
+    qb.put("date").greaterThanEquals(from).lessThanEquals(to);
+    BasicDBObject bdo = new BasicDBObject();
+    DBCollection findCollection = db.getCollection("project1");
+    DBCursor find = findCollection.find(bdo);
+    System.out.println("Number of document found = " + find.count());
+    String responseData = "";
+    while(find.hasNext()) {
+        String data = find.next().toString();
+        System.out.println(data);
+        responseData += data;
+    }
+
+
+    System.out.println("Finish getting the files");
+
+    System.out.println("Sending data back to client....");
+    // TODO: Sending data back to client
+    // You must use a builder to construct a new Protobuffer object
+    CommunicationServiceOuterClass.TransferDataResponse response = CommunicationServiceOuterClass.TransferDataResponse.newBuilder()
+      .setCommunication("Communication setup successfully")
+      .setData(responseData)
+      .build();
+
+    // Use responseObserver to send a single response back
+    responseObserver.onNext(response);
+
+    // Done. Call onCompleted.
+    responseObserver.onCompleted();
+  }
 }
