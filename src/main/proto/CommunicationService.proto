@@ -39,12 +39,12 @@ message Header {
  // type: type of this message
  //===================================================
  oneof type {
- boolean heartBeat = 5; // just let the receiver know you're still alive
+ bool heartBeat = 5; // just let the receiver know you're still alive
  Ping ping = 6;
  PutRequest putRequest = 7;
  GetRequest getRequest = 8;
  Data data = 9;
- int32 errorCode = 10
+ int32 errorCode = 10;
  }
 
  //===================================================
@@ -64,8 +64,8 @@ message Ping {
  // respond: set this if you are responding to a ping
  //===================================================
  oneof type {
- boolean request = 1; // require a respond
- boolean respond = 2; // don't need to respond
+ bool request = 1; // require a respond
+ bool respond = 2; // don't need to respond
  }
 }
 
@@ -97,7 +97,7 @@ message Data {
 // │ MetaData |
 // └──────────────┘
 message MetaData {
- int32 dataSize;
+ int32 dataSize = 1;
  int32 numOfFragment = 2;
 }
 
