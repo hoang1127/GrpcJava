@@ -5,7 +5,7 @@ import io.grpc.*;
 /*
  * A client for testing Ping
  */
-public class PingClient
+public class GetRequestClient
 {
     public static void main( String[] args ) throws Exception
     {
@@ -16,9 +16,9 @@ public class PingClient
 
       CommunicationServiceGrpc.CommunicationServiceBlockingStub stub = CommunicationServiceGrpc.newBlockingStub(channel);
 
-      CommunicationServiceOuterClass.Ping ping =
-      CommunicationServiceOuterClass.Ping.newBuilder()
-          .setRequest(true)
+      CommunicationServiceOuterClass.GetRequest getRequest =
+      CommunicationServiceOuterClass.GetRequest.newBuilder()
+          .setGetQuery("This is a test query")
           .build();
 
       CommunicationServiceOuterClass.Header request =
@@ -27,7 +27,7 @@ public class PingClient
           .setToIp("Receiver IP")
           .setOriginalIp("Original IP")
           .setMaxHop(5)
-          .setPing(ping)
+          .setGetRequest(getRequest)
           .setToken("1234567890")
           .build();
 
@@ -35,8 +35,8 @@ public class PingClient
       // Finally, make the call using the stub
       //CommunicationServiceOuterClass.TransferDataResponse response =
       //  stub.communication(request);
-      CommunicationServiceOuterClass.TransferDataResponse response =
-        stub.headerHandler(request);
+      CommunicationServiceOuterClass.Header response =
+        stub.messageHandler(request);
 
       System.out.println(response);
 
