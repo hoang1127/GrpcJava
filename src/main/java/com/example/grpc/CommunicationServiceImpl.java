@@ -148,4 +148,33 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
      // Done. Call onCompleted.
      responseObserver.onCompleted();
    }
+
+
+   // TODO: Working on this
+   /*
+    * Header Handler function
+    */
+    @Override
+    public void headerHandler(CommunicationServiceOuterClass.Header request,
+          StreamObserver<CommunicationServiceOuterClass.TransferDataResponse> responseObserver) {
+    // CommunicationRequest has toString auto-generated.
+      System.out.println(request);
+
+      System.out.println("Receive a header request");
+
+      if (request.hasPing()) {
+          System.out.println("Receive a Ping request");
+      }
+      System.out.println("Sending back response to client....");
+      CommunicationServiceOuterClass.TransferDataResponse response = CommunicationServiceOuterClass.TransferDataResponse.newBuilder()
+        .setCommunication("Communication setup successfully")
+        .setData("Ping received")
+        .build();
+
+      // Use responseObserver to send a single response back
+      responseObserver.onNext(response);
+
+      // Done. Call onCompleted.
+      responseObserver.onCompleted();
+    }
 }

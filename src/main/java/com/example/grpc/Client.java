@@ -19,16 +19,33 @@ public class Client
       //    .build();
 
       // TODO: Testing code for new .proto file
-      CommunicationServiceOuterClass.GetRequest request =
-      CommunicationServiceOuterClass.GetRequest.newBuilder()
-          .setGetQuery("FROM 2018/01/01 TO 2018/01/07")
+      //CommunicationServiceOuterClass.GetRequest request =
+      //CommunicationServiceOuterClass.GetRequest.newBuilder()
+      //    .setGetQuery("FROM 2018/01/01 TO 2018/01/07")
+      //    .build();
+
+      // TODO: Another test code for new proto file
+      CommunicationServiceOuterClass.Ping ping =
+      CommunicationServiceOuterClass.Ping.newBuilder()
+          .setRequest(true)
           .build();
+
+      CommunicationServiceOuterClass.Header request =
+      CommunicationServiceOuterClass.Header.newBuilder()
+          .setFromIp("Sender IP")
+          .setToIp("Receiver IP")
+          .setOriginalIp("Original IP")
+          .setMaxHop(5)
+          .setPing(ping)
+          .setToken("1234567890")
+          .build();
+
 
       // Finally, make the call using the stub
       //CommunicationServiceOuterClass.TransferDataResponse response =
       //  stub.communication(request);
       CommunicationServiceOuterClass.TransferDataResponse response =
-        stub.communication2(request);
+        stub.headerHandler(request);
 
       System.out.println(response);
 

@@ -151,5 +151,5 @@ service CommunicationService {
   rpc communication(TransferDataRequest) returns (TransferDataResponse);
   rpc communication2(GetRequest) returns (TransferDataResponse);
   rpc pingHandler(Ping) returns (Ping);
-  rpc headerHandler(Header) return (TransferDataResponse);
+  rpc headerHandler(Header) returns (TransferDataResponse);
 }
