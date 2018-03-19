@@ -21,7 +21,7 @@ public class MongoMain {
 	public static void main(String[] args) throws Exception {
 		try {
 			MongoClient mgClient = new MongoClient("localhost", 27017);
-			DB db = mgClient.getDB("cmpe275");
+			MongoDatabase db = mgClient.getDatabase("cmpe275");
 			System.out.println("Connected successfully");
 
 			 MongoCollection<Document> collection = db.getCollection("project1");
@@ -79,7 +79,7 @@ public class MongoMain {
 		updatedbobj.put("$set", todbobj);
 		dbcollect.update(fromdbobj, updatedbobj);
 	}
-	
+
 	private static void selectAll(DBCollection dbcollect) {
 		DBCursor dbCursor = dbcollect.find();
 		while(dbCursor.hasNext()) {

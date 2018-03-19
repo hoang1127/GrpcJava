@@ -124,7 +124,6 @@ message DatFragment {
  bytes data = 3;
 }
 
-
 //=====================================================
 //THINGS BELOW HERE IS FOR TESTING PURPOSE
 //=====================================================
@@ -143,9 +142,13 @@ message TransferDataResponse {
   string data = 2;
 }
 
+//=====================================================
+//GRPC services
+//=====================================================
 // Defining a Service, a Service can have multiple RPC operations
 service CommunicationService {
   // Define a RPC operation
   rpc communication(TransferDataRequest) returns (TransferDataResponse);
   rpc communication2(GetRequest) returns (TransferDataResponse);
+  rpc pingHandler(Ping) returns (Ping);
 }

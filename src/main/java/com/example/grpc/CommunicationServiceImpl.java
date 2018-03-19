@@ -124,4 +124,28 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
     // Done. Call onCompleted.
     responseObserver.onCompleted();
   }
+
+  /*
+   * Ping Handler function
+   */
+   @Override
+   public void pingHandler(CommunicationServiceOuterClass.Ping request,
+         StreamObserver<CommunicationServiceOuterClass.Ping> responseObserver) {
+   // CommunicationRequest has toString auto-generated.
+     System.out.println(request);
+
+     System.out.println("Receive a ping request");
+
+     System.out.println("Sending ping response to client....");
+
+     CommunicationServiceOuterClass.Ping response = CommunicationServiceOuterClass.Ping.newBuilder()
+       .setRespond(true)
+       .build();
+
+     // Use responseObserver to send a single response back
+     responseObserver.onNext(response);
+
+     // Done. Call onCompleted.
+     responseObserver.onCompleted();
+   }
 }
