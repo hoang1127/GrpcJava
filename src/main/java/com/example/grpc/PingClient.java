@@ -35,8 +35,8 @@ public class PingClient
       // Finally, make the call using the stub
       //CommunicationServiceOuterClass.TransferDataResponse response =
       //  stub.communication(request);
-      CommunicationServiceOuterClass.TransferDataResponse response =
-        stub.headerHandler(request);
+      CommunicationServiceOuterClass.Header response =
+        stub.messageHandler(request);
 
       System.out.println(response);
 

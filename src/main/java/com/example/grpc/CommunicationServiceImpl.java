@@ -127,59 +127,98 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
     responseObserver.onCompleted();
   }
 
-  /*
-   * Ping Handler function
-   */
-   @Override
-   public void pingHandler(CommunicationServiceOuterClass.Ping request,
-         StreamObserver<CommunicationServiceOuterClass.Ping> responseObserver) {
-   // CommunicationRequest has toString auto-generated.
-     System.out.println(request);
+    private CommunicationServiceOuterClass.Header handlePing (
+      CommunicationServiceOuterClass.Header request) {
 
-     System.out.println("Receive a ping request");
+        // Building Header response
+        System.out.println("Building response....");
+        String fromIp = request.getToIp();
+        String toIp = request.getFromIp();
+        String originalIp = request.getOriginalIp();
+        int maxHop = request.getMaxHop();
+        String token = request.getToken();
 
-     System.out.println("Sending ping response to client....");
+        CommunicationServiceOuterClass.Ping ping =
+        CommunicationServiceOuterClass.Ping.newBuilder()
+            .setRespond(true)
+            .build();
 
-     CommunicationServiceOuterClass.Ping response = CommunicationServiceOuterClass.Ping.newBuilder()
-       .setRespond(true)
-       .build();
+        System.out.println("Sending back response to client....");
+        CommunicationServiceOuterClass.Header response = CommunicationServiceOuterClass.Header.newBuilder()
+            .setFromIp(fromIp)
+            .setToIp(toIp)
+            .setOriginalIp(originalIp)
+            .setMaxHop(maxHop)
+            .setPing(ping)
+            .setToken(token)
+            .build();
 
-     // Use responseObserver to send a single response back
-     responseObserver.onNext(response);
-
-     // Done. Call onCompleted.
-     responseObserver.onCompleted();
-   }
-
-
-   // TODO: Working on this
-   /*
-    * Header Handler function
-    */
-    @Override
-    public void headerHandler(CommunicationServiceOuterClass.Header request,
-          StreamObserver<CommunicationServiceOuterClass.TransferDataResponse> responseObserver) {
-    // CommunicationRequest has toString auto-generated.
-      System.out.println(request);
-
-      System.out.println("Receive a header request");
-
-      if (request.hasPing()) {
-          System.out.println("Receive a Ping request");
-      }
-      System.out.println("Sending back response to client....");
-      CommunicationServiceOuterClass.TransferDataResponse response = CommunicationServiceOuterClass.TransferDataResponse.newBuilder()
-        .setCommunication("Communication setup successfully")
-        .setData("Ping received")
-        .build();
-
-      // Use responseObserver to send a single response back
-      responseObserver.onNext(response);
-
-      // Done. Call onCompleted.
-      responseObserver.onCompleted();
+        return response;
     }
 
+    private CommunicationServiceOuterClass.Header handleGetRequest (
+      CommunicationServiceOuterClass.Header request) {
+
+        // Building Header response
+        System.out.println("Building response....");
+        String fromIp = request.getToIp();
+        String toIp = request.getFromIp();
+        String originalIp = request.getOriginalIp();
+        int maxHop = request.getMaxHop();
+        String token = request.getToken();
+
+        // Connect to database and get some data from it
+        System.out.println("Getting data....");
+        MongoClient mgClient = new MongoClient("localhost", 27017);
+        DB db = mgClient.getDB("cmpe275");
+        System.out.println("Connected to database successfully");
+
+        // Now get the date from the request
+        Date from = new Date("2018/01/01");
+        Date to = new Date("2018/01/07");
+        QueryBuilder qb = new QueryBuilder();
+        qb.put("date").greaterThanEquals(from).lessThanEquals(to);
+        BasicDBObject bdo = new BasicDBObject();
+        DBCollection findCollection = db.getCollection("project1");
+        DBCursor find = findCollection.find(bdo);
+        System.out.println("Number of document found = " + find.count());
+        String responseData = "";
+        while(find.hasNext()) {
+            String data = find.next().toString();
+            System.out.println(data);
+            responseData += data;
+        }
+
+        // Convert data to proto format
+        byte b[] = new byte[1024];
+        b = responseData.getBytes();
+        ByteString bt = ByteString.copyFrom(b);
+        //
+        //
+        CommunicationServiceOuterClass.DatFragment datFragment =
+        CommunicationServiceOuterClass.DatFragment.newBuilder()
+            .setDataId(1)
+            .setFragmentId(1)
+            .setData(bt)
+            .build();
+        CommunicationServiceOuterClass.Data data =
+        CommunicationServiceOuterClass.Data.newBuilder()
+            .setDatFragment(datFragment)
+            .build();
+
+        System.out.println("Sending back response to client....");
+        CommunicationServiceOuterClass.Header response = CommunicationServiceOuterClass.Header.newBuilder()
+            .setFromIp(fromIp)
+            .setToIp(toIp)
+            .setOriginalIp(originalIp)
+            .setMaxHop(maxHop)
+            .setData(data)
+            .setToken(token)
+            .build();
+
+        return response;
+    }
+    // TODO: the main method, can safely ignoe other similar handler
     /*
      * Message Handler function
      */
@@ -191,68 +230,14 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
 
        System.out.println("Receive a header request");
 
+       CommunicationServiceOuterClass.Header response = null;
        if (request.hasPing()) {
            System.out.println("Receive a Ping request");
+           response = handlePing(request);
        } else if (request.hasGetRequest()) {
            System.out.println("Receive a GetRequest request");
+           response = handleGetRequest(request);
        }
-
-       // Building Header response
-       System.out.println("Building response....");
-       String fromIp = request.getToIp();
-       String toIp = request.getFromIp();
-       String originalIp = request.getOriginalIp();
-       int maxHop = request.getMaxHop();
-       String token = request.getToken();
-
-       // Connect to database and get some data from it
-       System.out.println("Getting data....");
-       MongoClient mgClient = new MongoClient("localhost", 27017);
-       DB db = mgClient.getDB("cmpe275");
-       System.out.println("Connected to database successfully");
-
-       // Now get the date from the request
-       Date from = new Date("2018/01/01");
-       Date to = new Date("2018/01/07");
-       QueryBuilder qb = new QueryBuilder();
-       qb.put("date").greaterThanEquals(from).lessThanEquals(to);
-       BasicDBObject bdo = new BasicDBObject();
-       DBCollection findCollection = db.getCollection("project1");
-       DBCursor find = findCollection.find(bdo);
-       System.out.println("Number of document found = " + find.count());
-       String responseData = "";
-       while(find.hasNext()) {
-           String data = find.next().toString();
-           System.out.println(data);
-           responseData += data;
-       }
-
-       // Convert data to proto format
-       byte b[] = new byte[1024];
-       b = responseData.getBytes();
-       ByteString bt = ByteString.copyFrom(b);
-       //
-       //
-       CommunicationServiceOuterClass.DatFragment datFragment =
-       CommunicationServiceOuterClass.DatFragment.newBuilder()
-           .setDataId(1)
-           .setFragmentId(1)
-           .setData(bt)
-           .build();
-       CommunicationServiceOuterClass.Data data =
-       CommunicationServiceOuterClass.Data.newBuilder()
-           .setDatFragment(datFragment)
-           .build();
-
-       System.out.println("Sending back response to client....");
-       CommunicationServiceOuterClass.Header response = CommunicationServiceOuterClass.Header.newBuilder()
-           .setFromIp(fromIp)
-           .setToIp(toIp)
-           .setOriginalIp(originalIp)
-           .setMaxHop(maxHop)
-           .setData(data)
-           .setToken(token)
-           .build();
 
        // Use responseObserver to send a single response back
        responseObserver.onNext(response);
