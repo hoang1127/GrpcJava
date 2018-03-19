@@ -1,3 +1,5 @@
+Updated 3/19
+
 HOW TO RUN:
 
 1/ Install + run mongodb on default port
@@ -12,7 +14,13 @@ $ mvn package exec:java -Dexec.mainClass=com.example.database.MongoTest
 $ mvn package exec:java -Dexec.mainClass=com.example.grpc.App
 
 4/ Run Grpc Client:
+There are 3 client flavor for you to test
+- Generic testing client
 $ mvn package exec:java -Dexec.mainClass=com.example.grpc.Client
+- Ping client to test Ping
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.PingClient
+- GetRequest client to test Get data request
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.GetRequestClient
 
 5/ Client should receive those 2 documents from server:
 communication: "Communication setup successfully, 2018/01/01 2018/01/07"
