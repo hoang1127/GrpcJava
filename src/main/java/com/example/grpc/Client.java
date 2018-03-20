@@ -25,6 +25,7 @@ public class Client
       //    .build();
 
       // TODO: Another test code for new proto file
+      /*
       CommunicationServiceOuterClass.Ping ping =
       CommunicationServiceOuterClass.Ping.newBuilder()
           .setRequest(true)
@@ -39,17 +40,17 @@ public class Client
           .setPing(ping)
           .setToken("1234567890")
           .build();
-
+          */
 
       // Finally, make the call using the stub
       //CommunicationServiceOuterClass.TransferDataResponse response =
       //  stub.communication(request);
-      CommunicationServiceOuterClass.TransferDataResponse response =
-        stub.headerHandler(request);
+      //CommunicationServiceOuterClass.TransferDataResponse response =
+        //stub.headerHandler(request);
 
-      System.out.println(response);
+      //System.out.println(response);
 
       // A Channel is shutdown before stopping process.
-      channel.shutdownNow();
+      //channel.shutdownNow();
     }
 }

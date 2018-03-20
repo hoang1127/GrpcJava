@@ -10,7 +10,7 @@ public class PingClient
     public static void main( String[] args ) throws Exception
     {
       // Set locolhost port 8080
-      final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8080")
+      final ManagedChannel channel = ManagedChannelBuilder.forTarget("169.254.19.43:8080")
         .usePlaintext(true)
         .build();
 
@@ -23,9 +23,9 @@ public class PingClient
 
       CommunicationServiceOuterClass.Header request =
       CommunicationServiceOuterClass.Header.newBuilder()
-          .setFromIp("Sender IP")
-          .setToIp("Receiver IP")
-          .setOriginalIp("Original IP")
+          .setFromIp("169.254.99.162")
+          .setToIp("162.254.19.43")
+          .setOriginalIp("169.254.99.162")
           .setMaxHop(5)
           .setPing(ping)
           .setToken("1234567890")
