@@ -119,6 +119,8 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
         CommunicationServiceOuterClass.GetRequest getRequest = request.getGetRequest();
         String query = getRequest.getGetQuery();
 
+        // TODO: For now, only get data from leader node,
+        // as each of our nodes should contain all the data already
         // Connect to database and get some data from it
         System.out.println("Getting data....");
         MongoClient mgClient = new MongoClient("localhost", 27017);
@@ -201,6 +203,13 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
                     .append("data", "This is a test data");
         collection.insertOne(doc);
 
+        // TODO: replicate data to client node in the cluster
+        // 1. Connect to each client via IPs + port (shell script or socket)
+        // 2. Send the same put data to it
+        // 3. Make sure we get response back from each Client
+        // 4. go to next step
+
+        // Build response and send back to requetor
         System.out.println("Sending back response to client....");
         CommunicationServiceOuterClass.Header response = CommunicationServiceOuterClass.Header.newBuilder()
             .setFromIp(fromIp)
@@ -258,7 +267,7 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
            System.out.println("Receive a PutRequest request");
            response = handlePutRequest(request);
        } else {
-           System.out.println("Unrecognized request");
+           System.out.println("Unrecognized request type");
        }
 
        // Use responseObserver to send a single response back
