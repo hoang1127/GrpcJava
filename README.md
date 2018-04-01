@@ -21,6 +21,8 @@ $ mvn package exec:java -Dexec.mainClass=com.example.grpc.Client
 $ mvn package exec:java -Dexec.mainClass=com.example.grpc.PingClient
 - GetRequest client to test Get data request
 $ mvn package exec:java -Dexec.mainClass=com.example.grpc.GetRequestClient
+- PutRequest client to test Get data request
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.PutRequestClient
 
 5/ Client should receive those 2 documents from server:
 communication: "Communication setup successfully, 2018/01/01 2018/01/07"
