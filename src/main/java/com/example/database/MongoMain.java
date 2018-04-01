@@ -40,6 +40,7 @@ public class MongoMain {
 
 		System.out.println("Server is done");
 	}
+	
 	private static void insertJSON(BufferedReader bufReader,DBCollection dbcollect) throws IOException {
 		System.out.println("Insert JSON: ");
 		dbcollect.insert((DBObject)JSON.parse(bufReader.readLine()));

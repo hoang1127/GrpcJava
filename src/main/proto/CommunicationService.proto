@@ -91,6 +91,10 @@ message Data {
  MetaData metaData = 1;
  DatFragment datFragment = 2;
  }
+ //===================================================
+ // from: from date
+ //===================================================
+ string date = 3;
 }
 
 // ┌──────────────┐
@@ -125,7 +129,7 @@ message DatFragment {
 }
 
 //=====================================================
-//THINGS BELOW HERE IS FOR TESTING PURPOSE
+//THINGS BELOW HERE ARE FOR TESTING PURPOSE
 //=====================================================
 // Request payload
 message TransferDataRequest {

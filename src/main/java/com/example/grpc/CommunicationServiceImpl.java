@@ -12,6 +12,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.QueryBuilder;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import java.util.Date;
 import java.util.ArrayList;
@@ -73,7 +75,7 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
     responseObserver.onCompleted();
   }
 
-  
+
 
     private CommunicationServiceOuterClass.Header handlePing (
       CommunicationServiceOuterClass.Header request) {
@@ -114,6 +116,8 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
         String originalIp = request.getOriginalIp();
         int maxHop = request.getMaxHop();
         String token = request.getToken();
+        CommunicationServiceOuterClass.GetRequest getRequest = request.getGetRequest();
+        String query = getRequest.getGetQuery();
 
         // Connect to database and get some data from it
         System.out.println("Getting data....");
@@ -166,6 +170,50 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
         return response;
     }
 
+    /*
+     * Handle Put Request
+     */
+    private CommunicationServiceOuterClass.Header handlePutRequest (
+      CommunicationServiceOuterClass.Header request) {
+
+        // Building Header response
+        System.out.println("Building response....");
+        String fromIp = request.getToIp();
+        String toIp = request.getFromIp();
+        String originalIp = request.getOriginalIp();
+        int maxHop = request.getMaxHop();
+        String token = request.getToken();
+
+        // TODO: put request stuff, need to be discussed with other team
+        CommunicationServiceOuterClass.PutRequest putRequest = request.getPutRequest();
+        CommunicationServiceOuterClass.Data putData = putRequest.getData();
+        Date date = new Date(putData.getDate());
+
+        // Connect to database and put some data from it
+        MongoClient mgClient = new MongoClient("localhost", 27017);
+        MongoDatabase db = mgClient.getDatabase("cmpe275");
+        System.out.println("Connected to database successfully");
+
+        System.out.println("Insert data to the database...");
+        MongoCollection<Document> collection = db.getCollection("project1");
+        //DBCollection collection = db.getCollection("project1");
+        Document doc = new Document("date", date)
+                    .append("data", "This is a test data");
+        collection.insertOne(doc);
+
+        System.out.println("Sending back response to client....");
+        CommunicationServiceOuterClass.Header response = CommunicationServiceOuterClass.Header.newBuilder()
+            .setFromIp(fromIp)
+            .setToIp(toIp)
+            .setOriginalIp(originalIp)
+            .setMaxHop(maxHop)
+            .setErrorCode(200)
+            .setToken(token)
+            .build();
+
+        return response;
+    }
+
     @Override
     public void pingHandler(CommunicationServiceOuterClass.Ping request,
           StreamObserver<CommunicationServiceOuterClass.Ping> responseObserver) {
@@ -208,6 +256,7 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
            response = handleGetRequest(request);
        } else if (request.hasPutRequest()) {
            System.out.println("Receive a PutRequest request");
+           response = handlePutRequest(request);
        } else {
            System.out.println("Unrecognized request");
        }
