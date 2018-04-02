@@ -5,6 +5,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.Mongo;
 
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
@@ -22,34 +23,50 @@ public class MongoMain {
 
 	public static void main(String[] args) throws Exception {
 		try {
-			MongoClient mgClient = new MongoClient("localhost", 27017);
-			MongoDatabase db = mgClient.getDatabase("cmpe275");
+	
+			Mongo mongo = new Mongo("localhost", 27017);
+			DB db = mongo.getDB("cmpe275");
+			DBCollection collection = db.getCollection("project1");
 			System.out.println("Connected successfully");
 
-			//  MongoCollection<Document> collection = db.getCollection("project1");
-			//  //DBCollection collection = db.getCollection("project1");
-			//  Document doc = new Document("date", new Date("01/01/2018"))
-		    //               .append("data", "This is data for 01/01/2018");
-			//  collection.insertOne(doc);
-			//  doc = new Document("date", new Date("01/02/2018"))
-		    //               .append("data", "This is data for 01/02/2018");
-			//  collection.insertOne(doc);
-			//  System.out.println("Collection completed successfully");
 
 			Scanner input = new Scanner(System.in);
 			// Wait for input
 			while(true){
-				System.out.println("Enter DB command : i: Insert ; c: Create ; d: Delete; u: Update x: Exit:   ");
+				System.out.println("Enter DB command : i: Insert ; ; s: Show ; c: Create ; d: Delete; u: Update x: Exit:   ");
 				// Get Keyboard input
 				String inputKey = input.nextLine();
 				System.out.print("You entered : ");
 				System.out.println(inputKey);
 				if(inputKey.equals("i")){
-					System.out.println("Insert into collection");
+					String json = "{ 'name' : '20140101_0100' , " +
+                        			"'data' : 'KABR,72659,Aberdeen: Aberdeen Regional Airport,SD,US,45.44333,-98.41306,395.9,1,NWS/FAA,ACTIVE,2,National Weather Service,,,,;' , " + "}";
+              
+        			DBObject dbObj = (DBObject)JSON.parse(json);
+            		collection.insert(dbObj);
+					System.out.println("Insert a Document into collection");
 				}else if(inputKey.equals("c")){
 					System.out.println("Create new collection");
 				}else if(inputKey.equals("d")){
-					System.out.println("Delete data");
+					DBObject docD = collection.findOne();
+					System.out.println(docD);
+					if(docD.equals(null)){
+						System.out.println("Collection is empty.");
+					}else{
+
+						collection.remove(docD);
+						System.out.println("Delete One Document");
+
+					}
+					
+				}else if(inputKey.equals("s")){
+					DBCursor cursor = collection.find();
+					while(cursor.hasNext()){
+						DBObject objData = cursor.next();
+						System.out.println(objData);
+					}
+					System.out.println(collection.find());
+				
 				}else if(inputKey.equals("u")){
 					System.out.println("Update data");
 				}else if(inputKey.equals("x")){
@@ -64,12 +81,17 @@ public class MongoMain {
 
 		System.out.println("Server is stop");
 	}
+	private static DBCollection createCollection(DB db, String collectionName){
+		DBCollection collection = db.getCollection(collectionName);
+		System.out.println("Connected successfully");
+		return collection;
+	}
 	
-	private static void insertJSON(BufferedReader bufReader,DBCollection dbcollect) throws IOException {
+	private static void insertJSON(BufferedReader bufReader, DBCollection dbcollect) throws IOException {
 		System.out.println("Insert JSON: ");
 		dbcollect.insert((DBObject)JSON.parse(bufReader.readLine()));
 	}
-	private static void insert(BufferedReader bufReader,DBCollection dbcollect) throws IOException {
+	private static void insert(BufferedReader bufReader, DBCollection dbcollect) throws IOException {
 		System.out.println("Insert Data: ");
 		String data_name = bufReader.readLine();
 		DBObject dbobj = new BasicDBObject();
