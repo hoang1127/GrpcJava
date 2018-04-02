@@ -32,7 +32,7 @@ public class MongoTest {
 			System.out.println(e);
 		}
 
-		System.out.println("Server is done");
+		System.out.println("Data inserted successfully");
 	}
 
 }

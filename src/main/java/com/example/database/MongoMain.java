@@ -16,6 +16,8 @@ import org.bson.Document;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Scanner;
+
 public class MongoMain {
 
 	public static void main(String[] args) throws Exception {
@@ -24,21 +26,43 @@ public class MongoMain {
 			MongoDatabase db = mgClient.getDatabase("cmpe275");
 			System.out.println("Connected successfully");
 
-			 MongoCollection<Document> collection = db.getCollection("project1");
-			 //DBCollection collection = db.getCollection("project1");
-			 Document doc = new Document("date", new Date("01/01/2018"))
-		                  .append("data", "This is data for 01/01/2018");
-			 collection.insertOne(doc);
-			 doc = new Document("date", new Date("01/02/2018"))
-		                  .append("data", "This is data for 01/02/2018");
-			 collection.insertOne(doc);
-			 System.out.println("Collection completed successfully");
+			//  MongoCollection<Document> collection = db.getCollection("project1");
+			//  //DBCollection collection = db.getCollection("project1");
+			//  Document doc = new Document("date", new Date("01/01/2018"))
+		    //               .append("data", "This is data for 01/01/2018");
+			//  collection.insertOne(doc);
+			//  doc = new Document("date", new Date("01/02/2018"))
+		    //               .append("data", "This is data for 01/02/2018");
+			//  collection.insertOne(doc);
+			//  System.out.println("Collection completed successfully");
+
+			Scanner input = new Scanner(System.in);
+			// Wait for input
+			while(true){
+				System.out.println("Enter DB command : i: Insert ; c: Create ; d: Delete; u: Update x: Exit:   ");
+				// Get Keyboard input
+				String inputKey = input.nextLine();
+				System.out.print("You entered : ");
+				System.out.println(inputKey);
+				if(inputKey.equals("i")){
+					System.out.println("Insert into collection");
+				}else if(inputKey.equals("c")){
+					System.out.println("Create new collection");
+				}else if(inputKey.equals("d")){
+					System.out.println("Delete data");
+				}else if(inputKey.equals("u")){
+					System.out.println("Update data");
+				}else if(inputKey.equals("x")){
+					System.out.println("Exit");
+					break;
+				}
+			}
 
 		}catch(Exception e) {
 			System.out.println(e);
 		}
 
-		System.out.println("Server is done");
+		System.out.println("Server is stop");
 	}
 	
 	private static void insertJSON(BufferedReader bufReader,DBCollection dbcollect) throws IOException {
