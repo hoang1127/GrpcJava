@@ -14,11 +14,11 @@ public class PutRequestClient
     public static void main( String[] args ) throws Exception
     {
       // Set locolhost port 8080
-      final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8080")
-        .usePlaintext(true)
-        .build();
+      //final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8080")
+      //  .usePlaintext(true)
+      //  .build();
 
-      CommunicationServiceGrpc.CommunicationServiceBlockingStub stub = CommunicationServiceGrpc.newBlockingStub(channel);
+      //CommunicationServiceGrpc.CommunicationServiceBlockingStub stub = CommunicationServiceGrpc.newBlockingStub(channel);
 
       // Open a test file
       /*
@@ -41,6 +41,7 @@ public class PutRequestClient
           System.out.println("Exception");
       }
       */
+      /*
       // Convert data to proto format
       RandomAccessFile f = new RandomAccessFile("./20140101_0100.txt", "r");
       byte[] b = new byte[(int)f.length()];
@@ -87,5 +88,6 @@ public class PutRequestClient
 
       // A Channel is shutdown before stopping process.
       channel.shutdownNow();
+      */
     }
 }

@@ -10,17 +10,32 @@ public class PingClient
     public static void main( String[] args ) throws Exception
     {
       // Set locolhost port 8080
-      final ManagedChannel channel = ManagedChannelBuilder.forTarget("169.254.90.246:3000")
+      final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8080")
         .usePlaintext(true)
         .build();
 
       CommunicationServiceGrpc.CommunicationServiceBlockingStub stub = CommunicationServiceGrpc.newBlockingStub(channel);
 
-      CommunicationServiceOuterClass.Ping request =
-      CommunicationServiceOuterClass.Ping.newBuilder()
-          .setRequest(true)
+      CommunicationServiceOuterClass.PingRequest pingRequest =
+      CommunicationServiceOuterClass.PingRequest.newBuilder()
+          .setMsg("Ping")
           .build();
 
+      CommunicationServiceOuterClass.Request request =
+      CommunicationServiceOuterClass.Request.newBuilder()
+          .setPing(pingRequest)
+          .build();
+      //GrpcServiceGrpc.GrpcServiceBlockingStub stub = GrpcServiceGrpc.newBlockingStub(channel);
+
+      //GrpcServiceOuterClass.PingRequest pingRequest =
+      //GrpcServiceOuterClass.PutRequest.newBuilder()
+      //    .setMsg("Ping")
+      //    .build();
+
+      //GrpcServiceOuterClass.Request request =
+      //GrpcServiceOuterClass.Request.newBuilder()
+      //    .setPingRequest(pingRequest)
+      //    .build();
       /*
       CommunicationServiceOuterClass.Header request =
       CommunicationServiceOuterClass.Header.newBuilder()
@@ -36,8 +51,10 @@ public class PingClient
       // Finally, make the call using the stub
       //CommunicationServiceOuterClass.TransferDataResponse response =
       //  stub.communication(request);
-      CommunicationServiceOuterClass.Ping response =
-        stub.pingHandler(request);
+      CommunicationServiceOuterClass.Response response =
+        stub.ping(request);
+      //GrpcServiceOuterClass.Response response =
+      //  stub.MessageHandler(request);
 
       System.out.println(response);
 

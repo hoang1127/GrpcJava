@@ -2,12 +2,12 @@ package com.example.grpc;
 
 import io.grpc.*;
 
-public class App 
+public class App
 {
     public static void main( String[] args ) throws Exception
     {
         System.out.println( "Set Communication!" );
-	
+
 	// Create a new server to listen on port 8080
       	Server server = ServerBuilder.forPort(8080)
         	.addService(new CommunicationServiceImpl())

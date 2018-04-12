@@ -10,6 +10,7 @@ public class GetRequestClient
     public static void main( String[] args ) throws Exception
     {
       // Set locolhost port 8080
+      /*
       final ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:8080")
         .usePlaintext(true)
         .build();
@@ -42,5 +43,6 @@ public class GetRequestClient
 
       // A Channel is shutdown before stopping process.
       channel.shutdownNow();
+      */
     }
 }
