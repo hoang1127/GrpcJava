@@ -10,7 +10,7 @@ testSQLOperations.createTable();
 3. Download Google Protocol Buffer v3.2. 
 4. Build the protobuf files: 
 
-	$./build_pb.sh. 
+	$./build_protobuf.sh. 
 
 5. Compile all java files using Apache Ant: 
 
@@ -18,12 +18,12 @@ testSQLOperations.createTable();
 
 6. Start the server : 
 
-	$./startServer.sh <config file> 
+	$./server.sh <config file> 
 
 	Note: the config file must have the ips and ports of all the nodes in the network. 
 7. Start the client: 
 
-	$./startClient.sh <cluster_id>
+	$./client.sh <cluster_id>
 
 	The client has 6 operations:   
 	
