@@ -28,25 +28,29 @@ import pipe.common.Common.WriteBody;
 import pipe.work.Work.WorkMessage;
 import routing.Pipe.CommandMessage;
 
+
 public class CommandSession implements Session, Runnable{
     protected static Logger logger = LoggerFactory.getLogger("server");
     private RoutingConf conf;
-    private CommandMessage message;
+    private CommandMessage msg;
     private Channel channel;
 
     public CommandSession(RoutingConf conf, CommandMessage msg, Channel channel) {
         this.conf = conf;
-        this.message = msg;
+        this.msg = msg;
         this.channel = channel;
     }
 
-    //Handling for command session from server
+    // When the server receive the commandMessage, how to deal with it?
     @Override
     public void handleMessage() {
-    	TaskType type = message.getRequest().getRequestType();
+    	TaskType type = msg.getRequest().getRequestType();
+
         try {
-            // When curretn id == message destination. Accept or transfer the message to new node
-           	if (message.hasPing()) {
+            // If the current nodeId equals msg destination, we can accept it.
+            // Or we will transfer the message to new node.
+
+           	if (msg.hasPing()) {
                 //return ping ack
                 Header.Builder hb = Header.newBuilder();
                 hb.setNodeId(conf.getNodeId());
@@ -57,60 +61,61 @@ public class CommandSession implements Session, Runnable{
                 cm.setPing(true);
                 channel.writeAndFlush(cm); //respond back to client
                 
-        	}else if (message.hasRequest()) {
+
+        	}else if (msg.hasRequest()) {
         		
             	logger.info("CommendSession handleMessage RequestType is " + type);
 
     			Hashtable<Integer, String> location = new Hashtable<Integer, String>();
-        		String fileName = message.getRequest().getRrb().getFilename();
+        		String fname = msg.getRequest().getRrb().getFilename();
         		
             	if (type == TaskType.REQUESTREADFILE) {
             	
-            		logger.info("read fileName is " + fileName);
+            		logger.info("read fileName is " + fname);
             		MySQLStorage mySQLStorage = MySQLStorage.getInstance();
             		
-            		// When fileName exists on server.
-            		if (fileName.equals("ls_all_the_files_and_chunks")) {
+            		// If the fname exists on the server.
+            		if (fname.equals("ls_all_the_files_and_chunks")) {
             			
             			ArrayList<ClassFileChunkRecord> fileList = mySQLStorage.selectAllRecordsFileChunk();
-                		//HashMap of locations
+                		//return to client a HashMap of locations
             			CommandMessage cm = MessageUtil.buildCommandMessage(
             					MessageUtil.buildHeader(conf.getNodeId(), System.currentTimeMillis()),
             					null,
             					null,
-            					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fileName, null , null, 
-            								MessageUtil.buildReadResponseAllFiles(-1, fileName, fileList.size(), 
+            					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fname, null , null, 
+            								MessageUtil.buildReadResponseAllFiles(-1, fname, fileList.size(), 
             										fileList, null)));
 
                 		channel.writeAndFlush(cm);
                 		
-            		} else if (mySQLStorage.checkFileExist(fileName)) {
-            			// First message from the client. 
-            			// The client says "I want to read the file whose name is fileName." chunkID in the request will be -1.
-            			int chunkId = message.getRequest().getRrb().getChunkId();
+            		} else if (mySQLStorage.checkFileExist(fname)) {
+            			// The first time to receive the message from the client. 
+            			// The client says that "I want to read the file whose name is fname." chunkID in the request will be -1.
+            			int chunkId = msg.getRequest().getRrb().getChunkId();
             			logger.info("chunkID is " + chunkId);
             			
-            			// By default to be 0;
-            			if (!message.getRequest().getRrb().hasChunkId()) {
+            			// if we don't set chunkId in the CommandMessage, its default to be 0;
+            			if (!msg.getRequest().getRrb().hasChunkId()) {
 
-                			// Get chunkIDs of the file from the database on the leader. 
-                			// All the nodes have same data and we just return the records on the leader.
-                			ArrayList<Integer> chunkIDArray = mySQLStorage.selectRecordFilenameChunkID(fileName);
+                			// Get all the chunkIDs of the file from the database on the leader. 
+                			// All the nodes have the same data and we just return the records on the leader.
+                			ArrayList<Integer> chunkIDArray = mySQLStorage.selectRecordFilenameChunkID(fname);
                     		logger.info("The first time to receive the read request from client, and server will return a location String");
                 			String host = "";
                 			try {
-    							Enumeration enm = NetworkInterface.getNetworkInterfaces();
+    							Enumeration e = NetworkInterface.getNetworkInterfaces();
     							String pattern1 = "169.254.*.*";
     							String pattern2 = "192.168.*.*";
-    							while(enm.hasMoreElements())
+    							while(e.hasMoreElements())
     							{
     								boolean isMatch1 = false, isMatch2 = false;
-    							    NetworkInterface netw = (NetworkInterface) enm.nextElement();
-    							    Enumeration enu = netw.getInetAddresses();
-    							    while (enu.hasMoreElements())
+    							    NetworkInterface n = (NetworkInterface) e.nextElement();
+    							    Enumeration ee = n.getInetAddresses();
+    							    while (ee.hasMoreElements())
     							    {
-    							        InetAddress ine = (InetAddress) enu.nextElement();
-    							        String ipAddress = ine.getHostAddress();
+    							        InetAddress i = (InetAddress) ee.nextElement();
+    							        String ipAddress = i.getHostAddress();
 
     							        isMatch1 = Pattern.matches(pattern1, ipAddress);
     							        isMatch2 = Pattern.matches(pattern2, ipAddress);
@@ -125,8 +130,8 @@ public class CommandSession implements Session, Runnable{
     							    }
     							    if (isMatch1 || isMatch2) break;
     							}
-                			} catch (Exception err) {
-    							err.printStackTrace();
+                			} catch (Exception e1) {
+    							e1.printStackTrace();
     						}
                 			int port = conf.getCommandPort();
                 			int nodeID = conf.getNodeId();
@@ -140,18 +145,19 @@ public class CommandSession implements Session, Runnable{
                 					MessageUtil.buildHeader(conf.getNodeId(), System.currentTimeMillis()),
                 					null,
                 					null,
-                					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fileName, null , null, 
-                								MessageUtil.buildReadResponse(-1, fileName, null, location.size(), 
+                					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fname, null , null, 
+                								MessageUtil.buildReadResponse(-1, fname, null, location.size(), 
                 										location, null)));
 
                     		channel.writeAndFlush(cm);
-                    	//chunk data request
+                    	
+                    	//ask for chunk data
                     	} else {
-                    		// Second time to receive the message from the client which has received the HashMap<chunkID, location> from the server (Only one location of each chunk).
-                    		// The client: "I want to get the data of chunkId from the location."
+                    		// The second time to receive the message from the client which has received the HashMap<chunkID, location> from the server (Only one location of each chunk).
+                    		// The client say that "I want to get the data of chunkId from the location."
                 			mySQLStorage = MySQLStorage.getInstance();
-                			String fileName = message.getRequest().getRrb().getFilename();
-                			int chunkID = message.getRequest().getRrb().getChunkId();
+                			String fileName = msg.getRequest().getRrb().getFilename();
+                			int chunkID = msg.getRequest().getRrb().getChunkId();
                 			ClassFileChunkRecord record = mySQLStorage.selectRecordFileChunk(fileName, chunkID);
                 			byte[] chunkData = record.getData();
                 			int chunkSize = record.getTotalNoOfChunks();
@@ -160,8 +166,8 @@ public class CommandSession implements Session, Runnable{
                 					MessageUtil.buildHeader(conf.getNodeId(), System.currentTimeMillis()),
                 					null,
                 					null,
-                					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fileName, null , null, 
-                								MessageUtil.buildReadResponse(-1, fileName, null, location.size(), 
+                					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fname, null , null, 
+                								MessageUtil.buildReadResponse(-1, fname, null, location.size(), 
                 										location, MessageUtil.buildChunk(chunkID, chunkData, chunkSize))));
               
                 			channel.writeAndFlush(cm);
@@ -173,25 +179,27 @@ public class CommandSession implements Session, Runnable{
             					MessageUtil.buildHeader(conf.getNodeId(), System.currentTimeMillis()),
             					null,
             					null,
-            					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fileName, Response.Status.FILENOTFOUND , null, null));
-                        logger.info("File " + fileName + " isn't in the database. Read failed on the server.");
+            					MessageUtil.buildResponse(TaskType.RESPONSEREADFILE, fname, Response.Status.FILENOTFOUND , null, null));
+                        logger.info("File " + fname + " isn't in the database. Read failed on the server.");
                         channel.writeAndFlush(cm);
                 	}
             	}
             	
-            	/* WRITE */
+            	
+            	/**************** WRITE ****************/
             	else if (type.equals(TaskType.REQUESTWRITEFILE)) {
             		
             		MySQLStorage mySQLStorage = MySQLStorage.getInstance();
-            		WriteBody wb = message.getRequest().getRwb();
-            		fileName = wb.getFilename();
+            		WriteBody wb = msg.getRequest().getRwb();
+            		fname = wb.getFilename();
     	    		int chunkId = wb.getChunk().getChunkId();
-    	    		int nodeId = message.getHeader().getNodeId();
+    	    		int nodeId = msg.getHeader().getNodeId();
     	    		
             		if(conf.getNodeId() == RaftHandler.getInstance().getLeaderNodeId()) {
-            			//Add into channels table
-    					if (!mySQLStorage.checkFileChunkExist(fileName, chunkId)) {
+            			//add into channels table
+    					if (!mySQLStorage.checkFileChunkExist(fname, chunkId)) {
     						//if it is not write before
+    						
 	    					if ((nodeId % 10) == RoutingConf.clusterId) { 
 	    						if (!ServerState.channelsTable.containsKey(nodeId)) {
 	    							CommandHandler.handleClientRequest(channel, nodeId);
@@ -206,22 +214,23 @@ public class CommandSession implements Session, Runnable{
 		    								null,
 		    								null,
 		    								MessageUtil.buildResponse(TaskType.RESPONSEWRITEFILE,
-                                            message.getRequest().getRwb().getFilename(),
+		    										msg.getRequest().getRwb().getFilename(),
 		    										Response.Status.SUCCESS,
 		    										null, 
 		    										null));
-		    									
+		    						
+		    						
 		    						firstChannel.writeAndFlush(cm);
 		    						CommandHandler.updateChannelsTable(client, firstChannel, nodeId);
 		    						return;
 	    						}
 	    						
-	        					ServerState.nextCluster.writeAndFlush(message);
+	        					ServerState.nextCluster.writeAndFlush(msg);
 	        					logger.info("Forwarding a WRITE message get from client id " + nodeId);
 	    					
 	    					} else { //from your neighbor
 	    						//forward anyway
-	    						ServerState.nextCluster.writeAndFlush(message);
+	    						ServerState.nextCluster.writeAndFlush(msg);
 	    						logger.info("Forwarding a WRITE message get from the neighbor cluster...");
 	    					}
     					} else {
@@ -237,10 +246,10 @@ public class CommandSession implements Session, Runnable{
     	    		}
     	    		
             		// If the file and chunkid already in server.
-            		if (!mySQLStorage.checkFileChunkExist(fileName, chunkId)) {
+            		if (!mySQLStorage.checkFileChunkExist(fname, chunkId)) {
             			
-	    	    		boolean result = mySQLStorage.insertRecordFileChunk(fileName, chunkId, data, numOfChunk, fileId);
-	    	    		logger.info("Writing the file <" + fileName + "> with its chunk_id <"+ chunkId+ "> out of <"+numOfChunk+"> into DB.");
+	    	    		boolean result = mySQLStorage.insertRecordFileChunk(fname, chunkId, data, numOfChunk, fileId);
+	    	    		logger.info("Writing the file <" + fname + "> with its chunk_id <"+ chunkId+ "> out of <"+numOfChunk+"> into DB.");
 	    	    		
 	    	    		if (result) {
 	    	    			// Replication
@@ -256,15 +265,15 @@ public class CommandSession implements Session, Runnable{
 		    	    		}
 	    	    		}
             		}
-    	    	} else { }//Update and Delete:
+    	    	} else { }//update, delete:
     	    }
         } catch (Exception e) {
             // TODO add logging
             Common.Failure.Builder eb = Common.Failure.newBuilder();
             eb.setId(conf.getNodeId());
-            eb.setRefId(message.getHeader().getNodeId());
+            eb.setRefId(msg.getHeader().getNodeId());
             eb.setMessage(e.getMessage());
-            CommandMessage.Builder rb = CommandMessage.newBuilder(message);
+            CommandMessage.Builder rb = CommandMessage.newBuilder(msg);
             rb.setErr(eb);
             channel.write(rb.build());
             e.printStackTrace();
@@ -276,12 +285,12 @@ public class CommandSession implements Session, Runnable{
     public void run() {
         handleMessage();
     }
-    // Get message command
+
     public CommandMessage getMsg() {
-        return message;
+        return msg;
     }
-    // Set message
+
     public void setMsg(CommandMessage msg) {
-        this.message = msg;
+        this.msg = msg;
     }
 }
