@@ -1,20 +1,20 @@
 #CMPE275 Team Project
 
 1. Download MySQL 5.7.18 
+
 2. Create a database called “FileDB” with a table named “FileChunk” in MySQL. 
 
 create database FileDB
-TestSQLOperations testSQLOperations = new TestSQLOperations();
-testSQLOperations.createTable();
 
 3. Download Google Protocol Buffer v3.2. 
+
 4. Build the protobuf files: 
 
-	$./build_protobuf.sh. 
+	$./build_protobuf.sh
 
 5. Compile all java files using Apache Ant: 
 
-    4ant build 
+    ant build 
 
 6. Start the server : 
 
