@@ -79,8 +79,9 @@ class Client():
           metaData=MetaData(uuid='14829'),
           queryParams=QueryParams(from_utc='2017-01-01',to_utc='2017-01-02'))
       )
-    resp = self.stub.MessageHandler(req)
-    return resp.datFragment.data
+    resp = self.stub.GetHandler(req)
+    print resp
+    #return resp.datFragment.data
 
 def test():
   client = Client()

@@ -2,9 +2,39 @@ import grpc
 
 import data_pb2
 import data_pb2_grpc
-from data_pb2 import PutRequest
+from data_pb2 import PutRequest, Response, MetaData, DatFragment
+
+CONST_MEDIA_TYPE_TEXT = 1
+CONST_CHUNK_SIZE = 5  # number of lines per payload
 
 class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
+
+    def preprocess(self, fpath):
+        """read file and chunkify it to be small batch for grpc transport"""
+        timestamp_utc = '2017-08-08'
+        cnt = 10
+        buffer = []
+        print(fpath)
+        with open(fpath) as f:
+            for line in f:
+                print line
+                if not cnt:
+                    break
+
+                if len(buffer) == CONST_CHUNK_SIZE:
+                    print "Chunk size"
+                    res = ''.join(buffer)
+                    buffer = []
+                    print res
+                    response=Response(
+                        Code=1,
+                        metaData=MetaData(uuid='14829'),
+                        datFragment=DatFragment(timestamp_utc=timestamp_utc, data=res.encode())
+                    )
+                    yield response
+                else:
+                    buffer.append(line)
+                    cnt = cnt - 1
 
     def Ping(self, request, context):
         print "Receive ping request"
@@ -35,4 +65,45 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             metaData = putRequest.metaData
             DatFragment = putRequest.datFragment
             buffer.append(DatFragment.data.decode())
-        print buffer
+
+        # Save buffer to File
+        # TODO
+        # Call comand to send file to clsuter
+        # TODO
+        # Reponse to server
+        response = data_pb2.Response()
+        status_code = 1
+        response.Code = status_code
+        response.msg = 'Put Request success'
+        print response
+        return response
+
+    def GetHandler(self, request, context):
+        print "Receive get request"
+        print request
+        timestamp_utc = '2017-08-08'
+        cnt = 10
+        buffer = []
+        fpath = './20140101_0100.txt'
+        print(fpath)
+        with open(fpath) as f:
+            for line in f:
+                print line
+                if not cnt:
+                    break
+
+                if len(buffer) == CONST_CHUNK_SIZE:
+                    print "Chunk size"
+                    res = ''.join(buffer)
+                    buffer = []
+                    print res
+                    response=Response(
+                        Code=1,
+                        metaData=MetaData(uuid='14829'),
+                        datFragment=DatFragment(timestamp_utc=timestamp_utc, data=res.encode())
+                    )
+                    yield response
+                else:
+                    buffer.append(line)
+                    cnt = cnt - 1
+        #self.preprocess()
