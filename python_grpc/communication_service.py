@@ -4,6 +4,9 @@ import data_pb2
 import data_pb2_grpc
 from data_pb2 import PutRequest, Response, MetaData, DatFragment
 
+from subprocess import call
+import sys, os
+
 CONST_MEDIA_TYPE_TEXT = 1
 CONST_CHUNK_SIZE = 5  # number of lines per payload
 
@@ -67,9 +70,14 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             buffer.append(DatFragment.data.decode())
 
         # Save buffer to File
-        # TODO
+        timestamp_utc = DatFragment.timestamp_utc
+        file_name = timestamp_utc + '.txt'
+        with open(file_name, 'w') as file:
+            file.write(str(buffer))
+
         # Call comand to send file to clsuter
-        # TODO
+        #call(['runClient.sh', '1 -write - ' + file_name])
+        os.system('runClient.sh 1 -write -' + file_name)
         # Reponse to server
         response = data_pb2.Response()
         status_code = 1
