@@ -77,7 +77,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
 
         # Call comand to send file to clsuter
         #call(['runClient.sh', '1 -write - ' + file_name])
-        os.system('runClient.sh 1 -write -' + file_name)
+        os.system('sh ../ProjectCluster/runClient.sh 1 -write -' + file_name)
         # Reponse to server
         response = data_pb2.Response()
         status_code = 1
