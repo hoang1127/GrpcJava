@@ -41,7 +41,7 @@ def preprocess(fpath):
 
 
 class Client():
-  def __init__(self, host='0.0.0.0', port=3000):
+  def __init__(self, host='169.254.79.93', port=8080):
     self.channel = grpc.insecure_channel('%s:%d' % (host, port))
     self.stub = data_pb2_grpc.CommunicationServiceStub(self.channel)
 
@@ -50,7 +50,7 @@ class Client():
       fromSender='some ping sender',
       toReceiver='some ping receiver',
       ping=PingRequest(msg='this is a sample ping request'))
-    resp = self.stub.Ping(req)
+    resp = self.stub.ping(req)
     return resp.msg
 
   def put(self, fpath):
@@ -67,7 +67,7 @@ class Client():
     #        datFragment=DatFragment(timestamp_utc=timestamp_utc, data=raw.encode()))
     #)
 
-    resp = self.stub.PutHandler(req)
+    resp = self.stub.putHandler(req)
     print(resp.msg)
     return True
 
@@ -79,15 +79,15 @@ class Client():
           metaData=MetaData(uuid='14829'),
           queryParams=QueryParams(from_utc='2017-01-01',to_utc='2017-01-02'))
       )
-    resp = self.stub.GetHandler(req)
+    resp = self.stub.getHandler(req)
     print resp
     #return resp.datFragment.data
 
 def test():
   client = Client()
   print(client.ping('hello'))
-  print(client.put('./20140101_0100.txt'))
-  print(client.get())
+  #print(client.put('./20140101_0100.txt'))
+  #print(client.get())
 
 if __name__ == '__main__':
   test()
