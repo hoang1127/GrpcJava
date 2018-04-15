@@ -7,16 +7,16 @@ import data_pb2_grpc
 from data_pb2 import Request, Response, PingRequest, PutRequest, GetRequest, DatFragment, MetaData, QueryParams
 
 CONST_MEDIA_TYPE_TEXT = 1
-CONST_CHUNK_SIZE = 5  # number of lines per payload
+CONST_CHUNK_SIZE = 2  # number of lines per payload
 
 def preprocess(fpath):
   """read file and chunkify it to be small batch for grpc transport"""
-  timestamp_utc = '2017-08-08'
+  #timestamp_utc = '2017-08-08 12:00:00'
   cnt = 10
   buffer = []
   with open(fpath) as f:
     for line in f:
-      print line
+      #print line
       if not cnt:
         break
 
@@ -27,7 +27,7 @@ def preprocess(fpath):
         print res
         putRequest=PutRequest(
             metaData=MetaData(uuid='14829', mediaType=CONST_MEDIA_TYPE_TEXT),
-            datFragment=DatFragment(timestamp_utc=timestamp_utc, data=res.encode()))
+            datFragment=DatFragment(data=res.encode()))
         request = Request(
             fromSender='some put sender',
             toReceiver='some put receiver',
@@ -55,7 +55,6 @@ class Client():
 
   def put(self, fpath):
     my_uuid = str(uuid.uuid1())
-    timestamp_utc = '2017-08-08'
     req = preprocess(fpath)
     #for timestamp_utc, raw in preprocess(fpath):
 
@@ -77,17 +76,21 @@ class Client():
       toReceiver='some put receiver',
       getRequest=GetRequest(
           metaData=MetaData(uuid='14829'),
-          queryParams=QueryParams(from_utc='2017-01-01',to_utc='2017-01-02'))
+          queryParams=QueryParams(from_utc='2018-03-16 21:00:00',to_utc='2018-03-16 23:00:00'))
       )
     resp = self.stub.getHandler(req)
-    print resp
+    print 'Response from server'
+    for response in resp:
+    	print response
+        print response.datFragment.data   
+    #print resp.msg
     #return resp.datFragment.data
 
 def test():
   client = Client()
-  print(client.ping('hello'))
-  #print(client.put('./20140101_0100.txt'))
-  #print(client.get())
+  #print(client.ping('hello'))
+  print(client.put('./mesowesteasy.out'))
+  print(client.get())
 
 if __name__ == '__main__':
   test()
