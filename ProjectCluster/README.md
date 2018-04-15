@@ -10,20 +10,20 @@ create database FileDB
 
 4. Build the protobuf files: 
 
-	$./build_protobuf.sh
+	./build_protobuf.sh
 
 5. Compile all java files using Apache Ant: 
 
-    ant build 
+	ant build 
 
 6. Start the server : 
 
-	$./server.sh <config file> 
+	./server.sh config/<node id .conf> 
 
 	Note: the config file must have the ips and ports of all the nodes in the network. 
 7. Start the client: 
 
-	$./client.sh <cluster_id>
+	./client.sh <node id>
 
 	The client has 6 operations:   
 	
