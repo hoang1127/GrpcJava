@@ -2,7 +2,8 @@ import grpc
 
 import data_pb2
 import data_pb2_grpc
-from data_pb2 import PutRequest, Response, MetaData, DatFragment
+from data_pb2 import PutRequest, Response, MetaData, DatFragment, GetRequest
+from mongodb_database import *
 
 from subprocess import call
 import sys, os
@@ -39,7 +40,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
                     buffer.append(line)
                     cnt = cnt - 1
 
-    def Ping(self, request, context):
+    def ping(self, request, context):
         print "Receive ping request"
 
         fromSender = request.fromSender
@@ -55,9 +56,8 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         print "Send Ping response"
         return response
 
-    def PutHandler(self, request_iterator, context):
+    def putHandler(self, request_iterator, context):
         print "Receive put request"
-        print request_iterator
         buffer = []
         for request in request_iterator:
             print request
@@ -67,17 +67,25 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             putRequest = request.putRequest
             metaData = putRequest.metaData
             DatFragment = putRequest.datFragment
-            buffer.append(DatFragment.data.decode())
+            buffer.append(DatFragment.data)
+
+        # Save buffer to my mongo database
+        print "Saving buffer to mongodb...."
+        client = MongoClient('localhost', 27017)
+        db = client.pymongo_test
+        insert_bulk_mongo(db, buffer)
+        print "Finish saving buffer to mongodb"
 
         # Save buffer to File
-        timestamp_utc = DatFragment.timestamp_utc
-        file_name = timestamp_utc + '.txt'
+        #timestamp_utc = DatFragment.timestamp_utc
+        file_name = 'timestamp_utc' + '.txt'
         with open(file_name, 'w') as file:
             file.write(str(buffer))
 
         # Call comand to send file to clsuter
         #call(['runClient.sh', '1 -write - ' + file_name])
         os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
+
         # Reponse to server
         response = data_pb2.Response()
         status_code = 1
@@ -86,32 +94,32 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         print response
         return response
 
-    def GetHandler(self, request, context):
+    def getHandler(self, request, context):
         print "Receive get request"
         print request
-        timestamp_utc = '2017-08-08'
-        cnt = 10
-        buffer = []
-        fpath = './20140101_0100.txt'
-        print(fpath)
-        with open(fpath) as f:
-            for line in f:
-                print line
-                if not cnt:
-                    break
 
-                if len(buffer) == CONST_CHUNK_SIZE:
-                    print "Chunk size"
-                    res = ''.join(buffer)
-                    buffer = []
-                    print res
-                    response=Response(
-                        Code=1,
-                        metaData=MetaData(uuid='14829'),
-                        datFragment=DatFragment(timestamp_utc=timestamp_utc, data=res.encode())
-                    )
-                    yield response
-                else:
-                    buffer.append(line)
-                    cnt = cnt - 1
-        #self.preprocess()
+        # Get info from local mongodb
+        getRequest = request.getRequest
+        queryParams = getRequest.queryParams
+        from_utc = queryParams.from_utc
+        to_utc = queryParams.to_utc
+
+        from_utc_format = from_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
+        to_utc_format = to_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
+
+        client = MongoClient('localhost', 27017)
+        db = client.pymongo_test
+        #insert_bulk_mongo(db, buffer)
+        result = find_mongo(db, from_utc_format, to_utc_format)
+        print "Result return from mongodb"
+        print result
+        for line in result:
+            print "Line in mongodb"
+            print line
+            response=Response(
+                Code=1,
+                metaData=MetaData(uuid='14829'),
+                datFragment=DatFragment(data=str(line).encode())
+            )
+            yield response
+        
