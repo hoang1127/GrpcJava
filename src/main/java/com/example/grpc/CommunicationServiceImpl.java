@@ -2,6 +2,8 @@ package com.example.grpc;
 
 import io.grpc.stub.StreamObserver;
 import io.grpc.*;
+
+import com.example.grpc.CommunicationServiceOuterClass.Request;
 import com.google.protobuf.ByteString;
 
 // TODO: should create new class to handle db and remove all these import
@@ -16,6 +18,9 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import java.util.Date;
+
+import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,74 +42,71 @@ public class CommunicationServiceImpl extends CommunicationServiceGrpc.Communica
 
         return response;
     }
-
-    /*
-    private CommunicationServiceOuterClass.Header handleGetRequest (
-      CommunicationServiceOuterClass.Header request) {
-
+    
+    public void getHandler(CommunicationServiceOuterClass.Request request, StreamObserver<CommunicationServiceOuterClass.Response> responseObserver) {
+  
         // Building Header response
         System.out.println("Building response....");
-        String fromIp = request.getToIp();
-        String toIp = request.getFromIp();
-        String originalIp = request.getOriginalIp();
-        int maxHop = request.getMaxHop();
-        String token = request.getToken();
+        String fromIp = request.getFromSender();
+        String toIp = request.getToReceiver();
+        String originalIp = request.getOriginalSender();
+//        int maxHop = request.getMaxHop();
+//        String token = request.getToken();
         CommunicationServiceOuterClass.GetRequest getRequest = request.getGetRequest();
-        String query = getRequest.getGetQuery();
+        CommunicationServiceOuterClass.QueryParams query = getRequest.getQueryParams();
 
         // TODO: For now, only get data from leader node,
         // as each of our nodes should contain all the data already
         // Connect to database and get some data from it
-        System.out.println("Getting data....");
-        MongoClient mgClient = new MongoClient("localhost", 27017);
-        DB db = mgClient.getDB("cmpe275");
-        System.out.println("Connected to database successfully");
-
-        // Now get the date from the request
-        Date from = new Date("2018/01/01");
-        Date to = new Date("2018/01/07");
-        QueryBuilder qb = new QueryBuilder();
-        qb.put("date").greaterThanEquals(from).lessThanEquals(to);
-        BasicDBObject bdo = new BasicDBObject();
-        DBCollection findCollection = db.getCollection("project1");
-        DBCursor find = findCollection.find(bdo);
-        System.out.println("Number of document found = " + find.count());
-        String responseData = "";
-        while(find.hasNext()) {
-            String data = find.next().toString();
-            System.out.println(data);
-            responseData += data;
-        }
-
-        // Convert data to proto format
-        byte b[] = new byte[1024];
-        b = responseData.getBytes();
-        ByteString bt = ByteString.copyFrom(b);
+//        System.out.println("Getting data....");
+//        MongoClient mgClient = new MongoClient("localhost", 27017);
+//        DB db = mgClient.getDB("cmpe275");
+//        System.out.println("Connected to database successfully");
+//
+//        // Now get the date from the request
+//        Date from = new Date("2018/01/01");
+//        Date to = new Date("2018/01/07");
+//        QueryBuilder qb = new QueryBuilder();
+//        qb.put("date").greaterThanEquals(from).lessThanEquals(to);
+//        BasicDBObject bdo = new BasicDBObject();
+//        DBCollection findCollection = db.getCollection("project1");
+//        DBCursor find = findCollection.find(bdo);
+//        System.out.println("Number of document found = " + find.count());
+//        String responseData = "";
+//        while(find.hasNext()) {
+//            String data = find.next().toString();
+//            System.out.println(data);
+//            responseData += data;
+//        }
+//
+//        // Convert data to proto format
+//        byte b[] = new byte[1024];
+//        b = responseData.getBytes();
+//        ByteString bt = ByteString.copyFrom(b);
 
         CommunicationServiceOuterClass.DatFragment datFragment =
         CommunicationServiceOuterClass.DatFragment.newBuilder()
-            .setDataId(1)
-            .setFragmentId(1)
-            .setData(bt)
+            .setTimestampUtc("input date here")
+            .setData(ByteString.copyFrom("hello".getBytes()))
             .build();
-        CommunicationServiceOuterClass.Data data =
-        CommunicationServiceOuterClass.Data.newBuilder()
+        
+        CommunicationServiceOuterClass.MetaData metaData =
+        CommunicationServiceOuterClass.MetaData.newBuilder()
+            .setUuid("???")
+            .setNumOfFragment(1)
+            .setMediaType(2)
+            .build();
+
+        CommunicationServiceOuterClass.Response response = CommunicationServiceOuterClass.Response.newBuilder()
+            .setCode(CommunicationServiceOuterClass.UploadStatusCode.Ok)
+            .setMsg("responseeee: "+ query)
+            .setMetaData(metaData)
             .setDatFragment(datFragment)
             .build();
-
-        System.out.println("Sending back response to client....");
-        CommunicationServiceOuterClass.Header response = CommunicationServiceOuterClass.Header.newBuilder()
-            .setFromIp(fromIp)
-            .setToIp(toIp)
-            .setOriginalIp(originalIp)
-            .setMaxHop(maxHop)
-            .setData(data)
-            .setToken(token)
-            .build();
-
-        return response;
+        
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
-    */
 
     /*
      * Handle Put Request
