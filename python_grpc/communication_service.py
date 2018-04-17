@@ -83,7 +83,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             file.write(str(buffer))
 
         # Call comand to send file to clsuter
-        call(['../ProjectCluster/client.sh', '1 -write -' + file_name])
+        #call(['../ProjectCluster/client.sh', '1 -write -' + file_name])
         #os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
 
         # Reponse to server
@@ -91,6 +91,16 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         status_code = 1
         response.Code = status_code
         response.msg = 'Put Request success'
+        datFragment = data_pb2.DatFragment()
+        datFragment.data = "Success".encode()
+        response.datFragment.data = "Success".encode()
+        #dataFragment.data = "Success".encode()
+        #response.datFragment=DatFragment(data="Success".encode())
+        line = "Success"
+        #response=Response(
+        #    Code=1,
+        ##    datFragment=DatFragment(timestamp_utc="0/0/0", data=line)
+        #)
         print response
         return response
 

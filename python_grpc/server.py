@@ -15,7 +15,7 @@ import communication_service
 
 def get_ip_address(ifname):
     import os
-    f = os.popen('ifconfig en0 | grep "inet "')
+    f = os.popen('ifconfig ' + ifname + ' | grep "inet "')
     your_ip=f.read().split(" ")[1]
     return your_ip
 
