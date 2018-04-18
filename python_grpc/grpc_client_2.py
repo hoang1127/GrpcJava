@@ -26,7 +26,7 @@ CONST_MESOWEST_HEADER = 'STN YYMMDD/HHMM MNET SLAT SLON SELV TMPF SKNT DRCT GUST
 
 nodes = requests.get('https://cmpe275-spring-18.mybluemix.net/get').text.split(',')
 # my_ip = get_ip_address('eth0')
-my_ip = 'localhost'
+my_ip = '169.254.176.49'
 
 # TODO: yield timestamp for mesonet data
 def preprocess(fpath):
