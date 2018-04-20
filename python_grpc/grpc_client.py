@@ -110,9 +110,11 @@ class Client():
 
 def test():
   client = Client()
+
   #print(client.ping('hello'))
   #print(client.put('./mesowesteasy.out'))
   print(client.ping())
+
 
 if __name__ == '__main__':
   test()

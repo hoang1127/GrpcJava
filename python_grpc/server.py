@@ -3,12 +3,21 @@ import time
 import grpc
 import data_pb2
 import data_pb2_grpc
-
+import requests
 from concurrent import futures
+import socket
+import fcntl
+import struct
 
 import communication_service
 
 #import zmq
+
+def get_ip_address(ifname):
+    import os
+    f = os.popen('ifconfig ' + ifname + ' | grep "inet "')
+    your_ip=f.read().split(" ")[1]
+    return your_ip
 
 def run(host, port):
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
@@ -27,4 +36,8 @@ def run(host, port):
 
 
 if __name__ == '__main__':
+  # publish server ip to cluster
+  my_ip = get_ip_address('en4')
+  print "My IP is " + my_ip
+  #nodes = requests.get('https://cmpe275-spring-18.mybluemix.net/put/' + my_ip)
   run('0.0.0.0', 8080)

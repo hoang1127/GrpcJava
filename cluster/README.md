@@ -1,42 +1,70 @@
-# cmpe275Project1
-## Team project on CMPE275 
+Updated 3/19
 
-1. Download MySQL 5.7.18 
-2. Create a database called “FileDB” with a table named “FileChunk” in MySQL. 
-```
-create database FileDB
-TestSQLOperations testSQLOperations = new TestSQLOperations();
-testSQLOperations.createTable();
-```
-3. Download Google Protocol Buffer v3.2. 
-4. Build the protobuf files: 
-	```
-	./build_pb.sh. 
-	```
-5. Compile all java files using Apache Ant: 
-	```
-	ant build 
-	```
-6. Start the server : 
-	```
-	./startServer.sh <config file> 
-	```
-	Note: the config file must have the ips and ports of all the nodes in the network. 
-7. Start the client: 
-	```
-	./startClient.sh <cluster_id>
-	```
-	The client has 6 operations:   
-	
-        1. ping <cluster id>: ping to a cluster.
-        
-        2. ls: retrieve a list of all files stored in the server
-        
-        3. leader: get leader’s ip and port from redis server
-        
-        4. read <fileName> : retrieve a file from the network.
-        
-        5. write <fileName>:  upload a file from the client’s project directory to the network.
-        
-        6. quit: exit the client.
+HOW TO RUN:
 
+1/ Install + run mongodb on default port
+
+2/ Either create mongo data manually or run the code in MongoTest.java, this
+code will create 2 test documents:
+
+{ "_id" : { "$oid" : "5aab742ca9fec20449442856"} , "date" : { "$date" : "2018-01-01T08:00:00.000Z"} , "data" : "This is data for 01/01/2018"}
+
+{ "_id" : { "$oid" : "5aab742ca9fec20449442857"} , "date" : { "$date" : "2018-01-02T08:00:00.000Z"} , "data" : "This is data for 01/02/2018"}
+
+$ mvn package exec:java -Dexec.mainClass=com.example.database.MongoTest -Dexec.cleanupDaemonThreads=false
+
+3/ Run Grpc Server :
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.App
+
+4/ Run Grpc Client:
+There are 3 client flavor for you to test
+- Generic testing client
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.Client
+- Ping client to test Ping
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.PingClient
+- GetRequest client to test Get data request
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.GetRequestClient
+- PutRequest client to test Get data request
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.PutRequestClient
+
+5/ Client should receive those 2 documents from server:
+communication: "Communication setup successfully, 2018/01/01 2018/01/07"data: 
+
+"{ \"_id\" : { \"$oid\" : \"5aab742ca9fec20449442856\"} , \"date\" : { \"$date\" : \"2018-01-01T08:00:00.000Z\"} , \"data\" : \"This is data for 01/01/2018\"}
+
+{ \"_id\" : { \"$oid\" : \"5aab742ca9fec20449442857\"} , \"date\" : { \"$date\" : \"2018-01-02T08:00:00.000Z\"} , \"data\" : \"This is data for 01/02/2018\"}"
+
+6/Test MongoDB
+
+$ mvn package exec:java -Dexec.mainClass=com.example.database.MongoMain -Dexec.cleanupDaemonThreads=false
+
+Enter from Keyboard: i: Insert ; c: Create ; d: Delete; u: Update x: Exit
+---------------------------------------------------------
+
+TODO LIST:
+- Update proto file with the class one (in Canvas), and update the code to send/receive
+using this proto
+- Right now, the return result is json string format, need to get the format from
+class and convert it to them
+- Use and save real data
+- Host and port now is hard coded, should make it flexible
+- Write classes to handle database operation (can be done after pre-intergration)
+- .... and a lot more
+
+---------------------------------------------------------
+GRPC JAVA
+
+//Create Java Project with Maven
+$ mvn archetype:generate -DgroupId=com.example.grpc \
+ -DartifactId=grpc-java-server \
+ -DarchetypeArtifactId=maven-archetype-quickstart \
+ -DinteractiveMode=false
+$ cd grpc-java-server
+
+$ mvn package
+
+// Run server
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.App
+
+// Run Clien
+$ mvn package exec:java -Dexec.mainClass=com.example.grpc.Client
