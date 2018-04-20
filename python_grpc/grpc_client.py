@@ -62,7 +62,7 @@ def put_iterator(fpath):
 
 
 class Client():
-  def __init__(self, host='0.0.0.0', port=8080):
+  def __init__(self, host='169.254.176.49', port=8080):
     self.channel = grpc.insecure_channel('%s:%d' % (host, port))
     self.stub = data_pb2_grpc.CommunicationServiceStub(self.channel)
 
@@ -110,9 +110,11 @@ class Client():
 
 def test():
   client = Client()
-  print(client.ping('hello'))
-  print(client.put('./mesowesteasy.out'))
-  #print(client.get())
+
+  #print(client.ping('hello'))
+  #print(client.put('./mesowesteasy.out'))
+  print(client.ping())
+
 
 if __name__ == '__main__':
   test()
