@@ -41,7 +41,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
                     cnt = cnt - 1
 
     def normalize_data_mesowest(self, input):
-        MESOWEST_STR = '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s'
+        MESOWEST_STR = '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n'
         pattern = '%Y%m%d/%H%M'
         print input
         values = input.split(',')
@@ -51,7 +51,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         return output
 
     def normalize_data_mesonet(self, input, timestamp):
-        MESONET_STR = '%s,%s,NULL,%s,%s,%s,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL'
+        MESONET_STR = '%s,%s,NULL,%s,%s,%s,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL\n'
         print 'Before ' + timestamp
         timestamp = timestamp.replace('_', '/')
         print 'After ' + timestamp
