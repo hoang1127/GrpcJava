@@ -20,21 +20,21 @@ CONST_DELIMITER = ','
 CONST_NEWLINE_CHAR = '\n'
 
 # station, timestamp_utc, mnet??, latitude, longitude, temperature, ...
-CONST_STD_COL_LIST = CONST_MESOWEST_HEADER.split()
-CONST_MESONET_COL_LIST = ['id','name','mesonet','lat','lon','elevation','agl','cit','state','country','active']
+#CONST_STD_COL_LIST = CONST_MESOWEST_HEADER.split()
+#CONST_MESONET_COL_LIST = ['id','name','mesonet','lat','lon','elevation','agl','cit','state','country','active']
 
 def insert_bulk_mongo(db, data):
     for d in data:
         print d
-        values = d.split()
-        dateTimeObject = datetime.datetime.strptime(values[1], '%Y%m%d/%H%M')
-        print dateTimeObject
-        pattern = '%Y%m%d/%H%M'
-        time_t = int(time.mktime(time.strptime(values[1], pattern))) * 1000
-        print time_t
+        values = d.split(',')
+        #dateTimeObject = datetime.datetime.strptime(values[1], '%Y%m%d/%H%M')
+        #print dateTimeObject
+        #pattern = '%Y%m%d/%H%M'
+        #time_t = int(time.mktime(time.strptime(values[1], pattern))) * 1000
+        #print time_t
         input_data = {
             "STN":values[0],
-            "timestamp":time_t,
+            "timestamp":values[1],
             "MNET":values[2],
             "SLAT":values[3],
             "SLON":values[4],

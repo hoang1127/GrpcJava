@@ -8,6 +8,7 @@ from data_pb2 import Request, Response, PingRequest, PutRequest, GetRequest, Dat
 
 CONST_MEDIA_TYPE_TEXT = 1
 CONST_CHUNK_SIZE = 2  # number of lines per payload
+CLIENT_IP = '0.0.0.0'
 
 def preprocess(fpath):
     """read file and chunkify it to be small batch for grpc transport"""
@@ -47,14 +48,14 @@ def process_file(fpath):
             buffer.append(line.rstrip('\n').lstrip(' '))
     return buffer
 
-def put_iterator(fpath):
+def put_iterator(fpath, timestamp = ''):
     buffer = process_file(fpath)
     for raw in buffer:
         putRequest=PutRequest(
             metaData=MetaData(uuid='14829', mediaType=CONST_MEDIA_TYPE_TEXT),
-            datFragment=DatFragment(data=raw.encode()))
+            datFragment=DatFragment(data=raw.encode(), timestamp_utc=timestamp))
         request = Request(
-            fromSender='some put sender',
+            fromSender=CLIENT_IP,
             toReceiver='some put receiver',
             putRequest=putRequest
         )
@@ -62,13 +63,13 @@ def put_iterator(fpath):
 
 
 class Client():
-  def __init__(self, host='169.254.176.49', port=8080):
+  def __init__(self, host=CLIENT_IP, port=8080):
     self.channel = grpc.insecure_channel('%s:%d' % (host, port))
     self.stub = data_pb2_grpc.CommunicationServiceStub(self.channel)
 
   def ping(self, data):
     req = Request(
-      fromSender='some ping sender',
+      fromSender=CLIENT_IP,
       toReceiver='some ping receiver',
       ping=PingRequest(msg='this is a sample ping request'))
     resp = self.stub.ping(req)
@@ -92,9 +93,26 @@ class Client():
     print(resp.msg)
     #return True
 
+  def put_mesonet(self, fpath):
+    my_uuid = str(uuid.uuid1())
+    #req = preprocess(fpath)
+    req = process_file(fpath)
+    request_iterator = put_iterator(fpath, '20050621_0800')
+    #req = Request(
+    #    fromSender='some put sender',
+    #    toReceiver='some put receiver',
+    #    putRequest=PutRequest(
+    #        metaData=MetaData(uuid=my_uuid, mediaType=CONST_MEDIA_TYPE_TEXT),
+    #        datFragment=DatFragment(timestamp_utc=timestamp_utc, data=raw.encode()))
+    #)
+
+    resp = self.stub.putHandler(request_iterator)
+    print(resp.msg)
+    #return True
+
   def get(self):
     req = Request(
-      fromSender='some put sender',
+      fromSender=CLIENT_IP,
       toReceiver='some put receiver',
       getRequest=GetRequest(
           metaData=MetaData(uuid='14829'),
@@ -113,7 +131,8 @@ def test():
 
   #print(client.ping('hello'))
   #print(client.put('./mesowesteasy.out'))
-  print(client.ping())
+  print(client.put_mesonet('./mesonettest'))
+  #print(client.ping())
 
 
 if __name__ == '__main__':

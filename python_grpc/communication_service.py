@@ -40,6 +40,29 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
                     buffer.append(line)
                     cnt = cnt - 1
 
+    def normalize_data_mesowest(self, input):
+        MESOWEST_STR = '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s'
+        pattern = '%Y%m%d/%H%M'
+        print input
+        values = input.split(',')
+        pattern = '%Y%m%d/%H%M'
+        time_t = int(time.mktime(time.strptime(values[1], pattern))) * 1000
+        output = MESOWEST_STR % (values[0], time_t, values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10], values[11], values[12], values[13], values[14], values[15])
+        return output
+
+    def normalize_data_mesonet(self, input, timestamp):
+        MESONET_STR = '%s,%s,NULL,%s,%s,%s,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL'
+        print 'Before ' + timestamp
+        timestamp = timestamp.replace('_', '/')
+        print 'After ' + timestamp
+        output = ''
+        print input
+        values = input.split(',')
+        pattern = '%Y%m%d/%H%M'
+        time_t = int(time.mktime(time.strptime(timestamp, pattern))) * 1000
+        output = MESONET_STR % (values[0], time_t, values[3], values[4], values[5])
+        return output
+
     def ping(self, request, context):
         print "Receive ping request"
 
@@ -59,7 +82,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
     def putHandler(self, request_iterator, context):
         print "Receive put request"
         buffer = []
-        timestamp = None
+        timestamp = ''
         for request in request_iterator:
             print request
             fromSender = request.fromSender
@@ -70,17 +93,23 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             DatFragment = putRequest.datFragment
             if DatFragment.timestamp_utc:
                 timestamp = DatFragment.timestamp_utc
-            buffer.append(DatFragment.data)
+            if timestamp != '':
+                # No timestamp, mesonet data
+                data = self.normalize_data_mesonet(DatFragment.data, timestamp)
+            else:
+                # Mesowest data
+                data = self.normalize_data_mesowest(DatFragment.data)
+            buffer.append(data)
 
         # Save buffer to my mongo database
         print "Saving buffer to mongodb...."
         print "Timestamp is " + str(timestamp)
         client = MongoClient('localhost', 27017)
         db = client.pymongo_test
-        if timestamp:
-            insert_bulk_mongo_mesonet(db, buffer, timestamp)
-        else:
-            insert_bulk_mongo(db, buffer)
+        #if timestamp:
+        #    insert_bulk_mongo_mesonet(db, buffer, timestamp)
+        #else:
+        insert_bulk_mongo(db, buffer)
         print "Finish saving buffer to mongodb"
 
         # Save buffer to File
