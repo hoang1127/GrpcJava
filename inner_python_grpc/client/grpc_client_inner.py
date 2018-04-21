@@ -1,7 +1,7 @@
 import sys
 sys.path.append('./proto')
 
-import uuid
+import uuid, socket
 import grpc, time
 import inner_data_pb2_grpc
 from inner_data_pb2 import Request, Response, PingRequest, PutRequest, GetRequest, DatFragment, MetaData, QueryParams
@@ -112,23 +112,27 @@ class Client:
         #print resp.msg
         #return resp.datFragment.data
 
-def test(heartbeat):
-    client = Client()
+def test(heartbeats, nodes):
 
     while True:
-        if heartbeat == 5:
-            print('initial leader election')
-            heartbeat = 0
-
-        else:
-            try:
-                print(client.ping('hello'))
-            except grpc.RpcError as err:
-                heartbeat += 1
-                print(err.details())
+        for i in range(len(nodes)):
+            host = nodes[i].split(':')[0]
+            port = int(nodes[i].split(':')[1])
+            client = Client(host, port)
         
-            time.sleep(2)
+            if heartbeats[i] >= 10:
+                print('dead node', i)
+
+            else:
+                try:
+                    print(client.ping('heartbeat'))
+                except grpc.RpcError as err:
+                    heartbeats[i] += 1
+                    print(err.details())
+            
+        time.sleep(2)
 
 if __name__ == '__main__':
-    heartbeat = 0
-    test(heartbeat)
+    nodes = ['0.0.0.0:8080', '0.0.0.0:8081']
+    heartbeats = [0,0,0,0]
+    test(heartbeats, nodes)

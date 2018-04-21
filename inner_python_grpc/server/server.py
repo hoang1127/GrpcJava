@@ -15,7 +15,6 @@ import communication_service
 def run(host, port, role):
   port = int(port)
   # followers = ['0.0.0.0:8080', '0.0.0.0:8081']
-  
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
   ds = communication_service.CommunicationService(role)
   inner_data_pb2_grpc.add_CommunicationServiceServicer_to_server(ds, server)
