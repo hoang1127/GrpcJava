@@ -113,7 +113,7 @@ class Client:
         #return resp.datFragment.data
 
 def test(heartbeats, nodes):
-    print(socket.getfqdn())
+
     while True:
         for i in range(len(nodes)):
             host = nodes[i].split(':')[0]
