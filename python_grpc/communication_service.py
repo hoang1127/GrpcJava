@@ -44,7 +44,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         MESOWEST_STR = '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n'
         pattern = '%Y%m%d/%H%M'
         print input
-        values = input.split(',')
+        values = input.split()
         pattern = '%Y%m%d/%H%M'
         time_t = int(time.mktime(time.strptime(values[1], pattern))) * 1000
         output = MESOWEST_STR % (values[0], time_t, values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10], values[11], values[12], values[13], values[14], values[15])
@@ -119,7 +119,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             file.write(str(buffer))
 
         # Call comand to send file to clsuter
-        call(['../ProjectCluster/client.sh', '1 -write -' + file_name])
+        call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
         #os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
 
         # Reponse to server
@@ -149,11 +149,12 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         queryParams = getRequest.queryParams
         from_utc = queryParams.from_utc
         to_utc = queryParams.to_utc
+        param_json = queryParams.param_json
 
         file_name = 'query' + '.txt'
         with open(file_name, 'w') as file:
             file.write(str(from_utc) + " to " + str(to_utc))
-        call(['../ProjectCluster/client.sh', '1 -write -' + file_name])
+        call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
 
         from_utc_format = from_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
         to_utc_format = to_utc.replace('-','').replace(' ','/').replace(':','')[:-2]

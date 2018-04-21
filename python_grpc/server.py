@@ -16,7 +16,10 @@ import communication_service
 def get_ip_address(ifname):
     import os
     f = os.popen('ifconfig ' + ifname + ' | grep "inet "')
-    your_ip=f.read().split(" ")[1]
+    try:
+        your_ip=f.read().split(" ")[1]
+    except:
+        your_ip = '0.0.0.0'
     return your_ip
 
 def run(host, port):
@@ -28,6 +31,7 @@ def run(host, port):
 
   _ONE_DAY_IN_SECONDS = 60 * 60 * 24
   try:
+
     print("Server started at...%d" % port)
     while True:
       time.sleep(_ONE_DAY_IN_SECONDS)
@@ -37,7 +41,7 @@ def run(host, port):
 
 if __name__ == '__main__':
   # publish server ip to cluster
-  #my_ip = get_ip_address('en4')
-  #print "My IP is " + my_ip
-  #nodes = requests.get('https://cmpe275-spring-18.mybluemix.net/put/' + my_ip)
+  my_ip = get_ip_address('en4')
+  print "My IP is " + my_ip
+  nodes = requests.get('https://cmpe275-spring-18.mybluemix.net/put/' + my_ip)
   run('0.0.0.0', 8080)

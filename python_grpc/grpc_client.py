@@ -6,6 +6,8 @@ import grpc
 import data_pb2_grpc
 from data_pb2 import Request, Response, PingRequest, PutRequest, GetRequest, DatFragment, MetaData, QueryParams
 
+import argparse
+
 CONST_MEDIA_TYPE_TEXT = 1
 CONST_CHUNK_SIZE = 2  # number of lines per payload
 CLIENT_IP = '0.0.0.0'
@@ -63,14 +65,15 @@ def put_iterator(fpath, timestamp = ''):
 
 
 class Client():
-  def __init__(self, host=CLIENT_IP, port=8080):
+  def __init__(self, host='0.0.0.0', port=8080):
+    self.receiver_ip = host
     self.channel = grpc.insecure_channel('%s:%d' % (host, port))
     self.stub = data_pb2_grpc.CommunicationServiceStub(self.channel)
 
   def ping(self, data):
     req = Request(
       fromSender=CLIENT_IP,
-      toReceiver='some ping receiver',
+      toReceiver=self.receiver_ip,
       ping=PingRequest(msg='this is a sample ping request'))
     resp = self.stub.ping(req)
     return resp.msg
@@ -81,13 +84,6 @@ class Client():
     #req = preprocess(fpath)
     req = process_file(fpath)
     request_iterator = put_iterator(fpath)
-    #req = Request(
-    #    fromSender='some put sender',
-    #    toReceiver='some put receiver',
-    #    putRequest=PutRequest(
-    #        metaData=MetaData(uuid=my_uuid, mediaType=CONST_MEDIA_TYPE_TEXT),
-    #        datFragment=DatFragment(timestamp_utc=timestamp_utc, data=raw.encode()))
-    #)
 
     resp = self.stub.putHandler(request_iterator)
     print(resp.msg)
@@ -98,13 +94,6 @@ class Client():
     #req = preprocess(fpath)
     req = process_file(fpath)
     request_iterator = put_iterator(fpath, '20050621_0800')
-    #req = Request(
-    #    fromSender='some put sender',
-    #    toReceiver='some put receiver',
-    #    putRequest=PutRequest(
-    #        metaData=MetaData(uuid=my_uuid, mediaType=CONST_MEDIA_TYPE_TEXT),
-    #        datFragment=DatFragment(timestamp_utc=timestamp_utc, data=raw.encode()))
-    #)
 
     resp = self.stub.putHandler(request_iterator)
     print(resp.msg)
@@ -113,7 +102,7 @@ class Client():
   def get(self):
     req = Request(
       fromSender=CLIENT_IP,
-      toReceiver='some put receiver',
+      toReceiver=self.receiver_ip,
       getRequest=GetRequest(
           metaData=MetaData(uuid='14829'),
           queryParams=QueryParams(from_utc='2018-03-16 21:00:00',to_utc='2018-03-16 23:00:00'))
@@ -129,11 +118,48 @@ class Client():
 def test():
   client = Client()
 
-  #print(client.ping('hello'))
-  #print(client.put('./mesowesteasy.out'))
-  print(client.put_mesonet('./mesonettest'))
+  print(client.ping('hello'))
+  print(client.put('./mesowesteasy.out'))
+  print(client.put_mesonet('./mesonettest.csv'))
   #print(client.ping())
 
 
 if __name__ == '__main__':
-  test()
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--foo', help='foo help')
+  parser.add_argument('--ping', help='ping someone', action="store_true")
+  parser.add_argument('-x', '--host', help='server host')
+  parser.add_argument('-p', '--port', type = int, help='server port')
+  parser.add_argument('--put', help='put a file to server')
+  parser.add_argument('--get', help='get data from server to a file')
+  parser.add_argument('-t', '--test', help='test command', action="store_true")
+  args = parser.parse_args()
+
+  if args.host:
+      host = args.host
+  else:
+      host = '0.0.0.0'
+
+  if args.port:
+      port = args.port
+  else:
+      port = 8080
+
+  client = Client(host=host, port=port)
+  if args.ping:
+      print(client.ping('hello'))
+  if args.put:
+      filename = args.put
+      if filename.endswith('.csv'):
+          #mesonet
+          print(client.put_mesonet(filename))
+      else:
+          #mesowest
+          print(client.put(filename))
+  if args.get:
+      filename = args.get
+      print(client.get)
+
+  if args.test:
+      test()
+  #test()
