@@ -110,15 +110,15 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
         insert_bulk_mongo(db, buffer)
         print "Finish saving buffer to mongodb"
 
-        # Save buffer to File
-        #timestamp_utc = DatFragment.timestamp_utc
-        file_name = 'timestamp_utc' + '.txt'
-        with open(file_name, 'w') as file:
-            file.write(str(buffer))
+        # # Save buffer to File
+        # #timestamp_utc = DatFragment.timestamp_utc
+        # file_name = 'timestamp_utc' + '.txt'
+        # with open(file_name, 'w') as file:
+        #     file.write(str(buffer))
 
-        # Call comand to send file to clsuter
-        call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
-        #os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
+        # # Call comand to send file to clsuter
+        # call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
+        # #os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
 
         # Reponse to server
         response = data_pb2.Response()
@@ -147,16 +147,27 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
         queryParams = getRequest.queryParams
         from_utc = queryParams.from_utc
         to_utc = queryParams.to_utc
+        #param_json = queryParams.param_json
 
-        from_utc_format = from_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
-        to_utc_format = to_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
 
+        file_name = 'query' + '.txt'
+        with open(file_name, 'w') as file:
+            file.write(str(from_utc) + " to " + str(to_utc))
+        call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
+        
+        #from_utc_format = from_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
+        #to_utc_format = to_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
+
+        print "Getting stuff from mongo db"
         client = MongoClient('localhost', 27017)
         db = client.pymongo_test
         #insert_bulk_mongo(db, buffer)
-        result = find_mongo(db, from_utc_format, to_utc_format)
+        result = find_mongo(db, from_utc, to_utc)
         print "Result return from mongodb"
         print result
+        #for document in result:
+        #  print "TTT: Result from mongo"
+        #  print document
         for line in result:
             print "Line in mongodb"
             print line
@@ -170,12 +181,15 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
     def askVote(self, request, context):
         print "Receive ask vote request"
         if self.flag == 0:
-            self.flag = 1
+            self.flag += 1
             res = inner_data_pb2.Response()
             res.msg = 'ok'
             return res
         
-        else: 
+        else:
+            self.flag += 1
+            if self.flag == 3
+                self.flag = 0
             res = inner_data_pb2.Response()
             res.msg = 'wait'
             return res
