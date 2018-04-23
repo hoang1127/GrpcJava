@@ -73,7 +73,7 @@ class Client:
     
         req = Request(
             fromSender=self.host + ':' + str(self.port),
-            toReceiver='0.0.0.0:8080',  # dont need this
+            toReceiver='0.0.0.0:8080',  # dont need
             ping=PingRequest(msg='this is a sample ping request'))
         resp = self.stub.ping(req)
         return resp.msg
@@ -113,7 +113,7 @@ class Client:
         #return resp.datFragment.data
 
 def test(elec_timeout, my_ip):
-    nodes = ['0.0.0.0:8080', '0.0.0.0:8081','0.0.0.0:8082', '0.0.0.0:8083']
+    nodes = ['169.254.115.118:8080', '169.254.214.119:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
     vote = 0
 
     while True:

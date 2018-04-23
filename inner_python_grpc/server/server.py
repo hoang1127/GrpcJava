@@ -23,6 +23,7 @@ def run(host, port, role):
   _ONE_DAY_IN_SECONDS = 60 * 60 * 24
   try:
     print("Server started at...%d" % port)
+    print(host)
     while True:
       time.sleep(_ONE_DAY_IN_SECONDS)
   except KeyboardInterrupt:

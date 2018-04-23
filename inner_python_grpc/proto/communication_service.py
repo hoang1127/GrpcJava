@@ -2,7 +2,6 @@ import sys
 sys.path.append('./mongodb')
 
 import sched, time
-import trollius as asyncio
 import grpc
 import inner_data_pb2
 import inner_data_pb2_grpc
@@ -22,7 +21,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
 
     def __init__(self, role):
         super(CommunicationService, self).__init__()
-        self.nodes = ['0.0.0.0:8080', '0.0.0.0:8081','0.0.0.0:8082', '0.0.0.0:8083']
+        self.nodes = ['169.254.115.118:8080', '169.254.214.119:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
         self.role = role
         self.flag = 0
 
