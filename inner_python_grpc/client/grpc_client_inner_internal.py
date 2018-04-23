@@ -117,7 +117,7 @@ def test(elec_timeout, my_ip):
     vote = 0
 
     while True:
-        with open('/Users/huynh/Documents/workspace/275final/GrpcJava/inner_python_grpc/info.txt','r') as f:
+        with open('info.txt','r') as f:
             leader = f.read()
         
         host = leader.split(':')[0]
@@ -158,7 +158,7 @@ def test(elec_timeout, my_ip):
                 except grpc.RpcError as err:
                     print(err.details())
                         
-            if vote >= 3:
+            if vote >= len(nodes)-1:
                 for i in range(len(nodes)):
                     hostTT = nodes[i].split(':')[0]
                     portTT = int(nodes[i].split(':')[1])

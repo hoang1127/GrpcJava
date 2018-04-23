@@ -79,6 +79,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
 
         print "Receive put request"
         buffer = []
+        timestamp = ''
         for request in request_iterator:
             print request
             fromSender = request.fromSender
@@ -87,12 +88,25 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
             putRequest = request.putRequest
             metaData = putRequest.metaData
             DatFragment = putRequest.datFragment
-            buffer.append(DatFragment.data)
+            if DatFragment.timestamp_utc:
+                timestamp = DatFragment.timestamp_utc
+            data = DatFragment.data
+            #if timestamp != '':
+                # No timestamp, mesonet data
+            #    data = self.normalize_data_mesonet(DatFragment.data, timestamp)
+            #else:
+                # Mesowest data
+            #    data = self.normalize_data_mesowest(DatFragment.data)
+            buffer.append(data)
 
         # Save buffer to my mongo database
         print "Saving buffer to mongodb...."
+        print "Timestamp is " + str(timestamp)
         client = MongoClient('localhost', 27017)
         db = client.pymongo_test
+        #if timestamp:
+        #    insert_bulk_mongo_mesonet(db, buffer, timestamp)
+        #else:
         insert_bulk_mongo(db, buffer)
         print "Finish saving buffer to mongodb"
 
@@ -103,14 +117,24 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
             file.write(str(buffer))
 
         # Call comand to send file to clsuter
-        #call(['runClient.sh', '1 -write - ' + file_name])
-        os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
+        call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
+        #os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
 
         # Reponse to server
-        response = inner_data_pb2.Response()
+        response = data_pb2.Response()
         status_code = 1
         response.Code = status_code
         response.msg = 'Put Request success'
+        datFragment = data_pb2.DatFragment()
+        datFragment.data = "Success".encode()
+        response.datFragment.data = "Success".encode()
+        #dataFragment.data = "Success".encode()
+        #response.datFragment=DatFragment(data="Success".encode())
+        line = "Success"
+        #response=Response(
+        #    Code=1,
+        ##    datFragment=DatFragment(timestamp_utc="0/0/0", data=line)
+        #)
         print response
         return response
 
@@ -161,7 +185,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
         print request
         self.role = 'leader'
 
-        with open('/Users/huynh/Documents/workspace/275final/GrpcJava/inner_python_grpc/info.txt','w') as f:
+        with open('info.txt','w') as f:
             f.write(request.fromSender)
 
         res = inner_data_pb2.Response()
