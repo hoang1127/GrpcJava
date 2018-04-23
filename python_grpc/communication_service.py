@@ -7,6 +7,8 @@ from mongodb_database import *
 
 from subprocess import call
 import sys, os
+from datetime import datetime, timedelta
+
 
 CONST_MEDIA_TYPE_TEXT = 1
 CONST_CHUNK_SIZE = 5  # number of lines per payload
@@ -60,6 +62,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         values = input.split(',')
         pattern = '%Y%m%d/%H%M'
         time_t = int(time.mktime(time.strptime(timestamp, pattern))) * 1000
+
         output = MESONET_STR % (values[0], time_t, values[3], values[4], values[5])
         return output
 
@@ -93,12 +96,13 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             DatFragment = putRequest.datFragment
             if DatFragment.timestamp_utc:
                 timestamp = DatFragment.timestamp_utc
-            if timestamp != '':
+            data = DatFragment.data
+            #if timestamp != '':
                 # No timestamp, mesonet data
-                data = self.normalize_data_mesonet(DatFragment.data, timestamp)
-            else:
+            #    data = self.normalize_data_mesonet(DatFragment.data, timestamp)
+            #else:
                 # Mesowest data
-                data = self.normalize_data_mesowest(DatFragment.data)
+            #    data = self.normalize_data_mesowest(DatFragment.data)
             buffer.append(data)
 
         # Save buffer to my mongo database
@@ -149,22 +153,27 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         queryParams = getRequest.queryParams
         from_utc = queryParams.from_utc
         to_utc = queryParams.to_utc
-        param_json = queryParams.param_json
+        #param_json = queryParams.param_json
+
 
         file_name = 'query' + '.txt'
         with open(file_name, 'w') as file:
             file.write(str(from_utc) + " to " + str(to_utc))
         call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
+        
+        #from_utc_format = from_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
+        #to_utc_format = to_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
 
-        from_utc_format = from_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
-        to_utc_format = to_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
-
+        print "Getting stuff from mongo db"
         client = MongoClient('localhost', 27017)
         db = client.pymongo_test
         #insert_bulk_mongo(db, buffer)
-        result = find_mongo(db, from_utc_format, to_utc_format)
+        result = find_mongo(db, from_utc, to_utc)
         print "Result return from mongodb"
         print result
+        #for document in result:
+        #  print "TTT: Result from mongo"
+        #  print document
         for line in result:
             print "Line in mongodb"
             print line

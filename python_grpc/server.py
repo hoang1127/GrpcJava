@@ -43,5 +43,5 @@ if __name__ == '__main__':
   # publish server ip to cluster
   my_ip = get_ip_address('en4')
   print "My IP is " + my_ip
-  nodes = requests.get('https://cmpe275-spring-18.mybluemix.net/put/' + my_ip)
+  #nodes = requests.get('https://cmpe275-spring-18.mybluemix.net/put/' + my_ip)
   run('0.0.0.0', 8080)

@@ -7,6 +7,8 @@ import data_pb2_grpc
 from data_pb2 import Request, Response, PingRequest, PutRequest, GetRequest, DatFragment, MetaData, QueryParams
 
 import argparse
+from datetime import datetime, timedelta
+import time
 
 CONST_MEDIA_TYPE_TEXT = 1
 CONST_CHUNK_SIZE = 2  # number of lines per payload
@@ -53,16 +55,53 @@ def process_file(fpath):
 def put_iterator(fpath, timestamp = ''):
     buffer = process_file(fpath)
     for raw in buffer:
+        if timestamp != '':
+            data_out = normalize_data_mesonet(raw, timestamp)
+            print data_out
+        else:
+            data_out = normalize_data_mesowest(raw)
         putRequest=PutRequest(
             metaData=MetaData(uuid='14829', mediaType=CONST_MEDIA_TYPE_TEXT),
-            datFragment=DatFragment(data=raw.encode(), timestamp_utc=timestamp))
+            datFragment=DatFragment(data=data_out.encode(), timestamp_utc=timestamp))
         request = Request(
             fromSender=CLIENT_IP,
-            toReceiver='some put receiver',
+            toReceiver='host IP',
             putRequest=putRequest
         )
         yield request
 
+
+def normalize_data_mesonet(input, timestamp):
+    MESONET_STR = '%s,%s,NULL,%s,%s,%s,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL'
+    #print 'Before ' + timestamp
+    timestamp = timestamp.replace('_', '/')
+    #print 'After ' + timestamp
+    date_obj = datetime.strptime(timestamp, '%Y%m%d/%H%M')
+    time_s = datetime.strftime(date_obj, '%Y-%m-%d %H:%M:%S')
+    #print time_s
+    output = ''
+    #print input
+    values = input.split(',')
+    #pattern = '%Y%m%d/%H%M'
+    #time_t = int(time.mktime(time.strptime(timestamp, pattern))) * 1000
+    #dt = .strftime('%Y-%m-%d %H:%M:%S')
+    #print(dt)
+    output = MESONET_STR % (values[0], time_s, values[3], values[4], values[5])
+    #print 'Output is ' + output
+    return output
+
+def normalize_data_mesowest(input):
+    MESOWEST_STR = '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s'
+    pattern = '%Y%m%d/%H%M'
+    print input
+    values = input.split()
+    date_obj = datetime.strptime(values[1], '%Y%m%d/%H%M')
+    time_s = datetime.strftime(date_obj, '%Y-%m-%d %H:%M:%S')
+    #pattern = '%Y%m%d/%H%M'
+    #time_t = int(time.mktime(time.strptime(values[1], pattern))) * 1000
+    output = MESOWEST_STR % (values[0], time_s, values[2], values[3], values[4], values[5], values[6], values[7], values[8], values[9], values[10], values[11], values[12], values[13], values[14], values[15])
+    print "Output is " + output
+    return output
 
 class Client():
   def __init__(self, host='0.0.0.0', port=8080):
@@ -158,7 +197,7 @@ if __name__ == '__main__':
           print(client.put(filename))
   if args.get:
       filename = args.get
-      print(client.get)
+      print(client.get())
 
   if args.test:
       test()

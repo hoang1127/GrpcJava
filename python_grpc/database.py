@@ -114,6 +114,7 @@ def find_mongo(db, startDate, endDate):
     endDateTS = int(time.mktime(time.strptime(endDate, pattern))) * 1000
     result=db.mesowest.find({"timestamp":{"$lt": endDateTS, "$gte": startDateTS}})
     for document in result:
+      print "Result from mongodb"
       print(document)
     return result
 
