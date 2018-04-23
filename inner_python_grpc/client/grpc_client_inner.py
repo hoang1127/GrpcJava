@@ -133,6 +133,6 @@ def test(heartbeats, nodes):
         time.sleep(2)
 
 if __name__ == '__main__':
-    nodes = ['0.0.0.0:8080', '0.0.0.0:8081']
+    nodes = ['0.0.0.0:8080', '0.0.0.0:8081','0.0.0.0:8082', '0.0.0.0:8083']
     heartbeats = [0,0,0,0]
     test(heartbeats, nodes)

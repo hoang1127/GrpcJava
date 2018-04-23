@@ -24,7 +24,7 @@ public class LeaderNode implements NodeState {
 	@Override
 	public synchronized void run() {
 		
-		System.out.println("Node " + this.handler.getNodeId() + " - " + "IN LEADER MODE, term = " + this.handler.getTerm());
+		System.out.println("The Node " + this.handler.getNodeId() + " - " + "Leader Mode, term = " + this.handler.getTerm());
 		try {
 			if (this.handler.getNodeMode() == 3) {
 		 		for (EdgeInfo ei:this.handler.getEdgeMonitor().getOutboundEdges().getMap().values()) {
@@ -57,5 +57,4 @@ public class LeaderNode implements NodeState {
 	public synchronized void processReplyHeartBeatToLeader(WorkMessage wm) {
 		// TODO Auto-generated method stub
 	}
-
 }

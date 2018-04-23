@@ -14,7 +14,6 @@ import communication_service
 
 def run(host, port, role):
   port = int(port)
-  # followers = ['0.0.0.0:8080', '0.0.0.0:8081']
   server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
   ds = communication_service.CommunicationService(role)
   inner_data_pb2_grpc.add_CommunicationServiceServicer_to_server(ds, server)
@@ -24,6 +23,7 @@ def run(host, port, role):
   _ONE_DAY_IN_SECONDS = 60 * 60 * 24
   try:
     print("Server started at...%d" % port)
+    print(host)
     while True:
       time.sleep(_ONE_DAY_IN_SECONDS)
   except KeyboardInterrupt:
