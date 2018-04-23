@@ -153,7 +153,7 @@ class Client:
         #return resp.datFragment.data
 
 def test(elec_timeout, my_ip):
-    nodes = ['169.254.115.118:8080', '169.254.15.17:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
+    nodes = ['169.254.246.241:8080', '169.254.15.17:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
     vote = 0
 
     while True:
