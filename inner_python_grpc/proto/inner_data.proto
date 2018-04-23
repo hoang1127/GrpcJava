@@ -64,4 +64,6 @@ service CommunicationService {
   rpc putHandler(stream Request) returns (Response);
   rpc getHandler(Request) returns (stream Response);
   rpc ping(Request) returns (Response);
+  rpc askVote(Request) returns (Response);
+  rpc setLeader(Request) returns (Response);
 }

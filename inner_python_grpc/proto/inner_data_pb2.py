@@ -20,9 +20,8 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='inner_data.proto',
   package='grpcComm',
   syntax='proto3',
-  serialized_pb=_b('\n\x10inner_data.proto\x12\x08grpcComm\"\xd3\x01\n\x07Request\x12\x12\n\nfromSender\x18\x01 \x01(\t\x12\x12\n\ntoReceiver\x18\x02 \x01(\t\x12\x16\n\x0eoriginalSender\x18\x03 \x01(\t\x12%\n\x04ping\x18\x06 \x01(\x0b\x32\x15.grpcComm.PingRequestH\x00\x12*\n\nputRequest\x18\x07 \x01(\x0b\x32\x14.grpcComm.PutRequestH\x00\x12*\n\ngetRequest\x18\x08 \x01(\x0b\x32\x14.grpcComm.GetRequestH\x00\x42\t\n\x07payload\"\x8d\x01\n\x08Response\x12\"\n\x04\x43ode\x18\x01 \x01(\x0e\x32\x14.grpcComm.StatusCode\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12$\n\x08metaData\x18\x03 \x01(\x0b\x32\x12.grpcComm.MetaData\x12*\n\x0b\x64\x61tFragment\x18\x04 \x01(\x0b\x32\x15.grpcComm.DatFragment\"\x1a\n\x0bPingRequest\x12\x0b\n\x03msg\x18\x01 \x01(\t\"^\n\nPutRequest\x12$\n\x08metaData\x18\x01 \x01(\x0b\x32\x12.grpcComm.MetaData\x12*\n\x0b\x64\x61tFragment\x18\x02 \x01(\x0b\x32\x15.grpcComm.DatFragment\"^\n\nGetRequest\x12$\n\x08metaData\x18\x01 \x01(\x0b\x32\x12.grpcComm.MetaData\x12*\n\x0bqueryParams\x18\x02 \x01(\x0b\x32\x15.grpcComm.QueryParams\"/\n\x0bQueryParams\x12\x10\n\x08\x66rom_utc\x18\x01 \x01(\t\x12\x0e\n\x06to_utc\x18\x02 \x01(\t\"B\n\x08MetaData\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x15\n\rnumOfFragment\x18\x02 \x01(\x05\x12\x11\n\tmediaType\x18\x03 \x01(\x05\"2\n\x0b\x44\x61tFragment\x12\x15\n\rtimestamp_utc\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c*-\n\nStatusCode\x12\x0b\n\x07Unknown\x10\x00\x12\x06\n\x02Ok\x10\x01\x12\n\n\x06\x46\x61iled\x10\x02\x32\xb3\x01\n\x14\x43ommunicationService\x12\x35\n\nputHandler\x12\x11.grpcComm.Request\x1a\x12.grpcComm.Response(\x01\x12\x35\n\ngetHandler\x12\x11.grpcComm.Request\x1a\x12.grpcComm.Response0\x01\x12-\n\x04ping\x12\x11.grpcComm.Request\x1a\x12.grpcComm.ResponseB#\n\x14\x63om.cmpe275.grpcCommB\tDataProtoP\x01\x62\x06proto3')
+  serialized_pb=_b('\n\x10inner_data.proto\x12\x08grpcComm\"\xd3\x01\n\x07Request\x12\x12\n\nfromSender\x18\x01 \x01(\t\x12\x12\n\ntoReceiver\x18\x02 \x01(\t\x12\x16\n\x0eoriginalSender\x18\x03 \x01(\t\x12%\n\x04ping\x18\x06 \x01(\x0b\x32\x15.grpcComm.PingRequestH\x00\x12*\n\nputRequest\x18\x07 \x01(\x0b\x32\x14.grpcComm.PutRequestH\x00\x12*\n\ngetRequest\x18\x08 \x01(\x0b\x32\x14.grpcComm.GetRequestH\x00\x42\t\n\x07payload\"\x8d\x01\n\x08Response\x12\"\n\x04\x43ode\x18\x01 \x01(\x0e\x32\x14.grpcComm.StatusCode\x12\x0b\n\x03msg\x18\x02 \x01(\t\x12$\n\x08metaData\x18\x03 \x01(\x0b\x32\x12.grpcComm.MetaData\x12*\n\x0b\x64\x61tFragment\x18\x04 \x01(\x0b\x32\x15.grpcComm.DatFragment\"\x1a\n\x0bPingRequest\x12\x0b\n\x03msg\x18\x01 \x01(\t\"^\n\nPutRequest\x12$\n\x08metaData\x18\x01 \x01(\x0b\x32\x12.grpcComm.MetaData\x12*\n\x0b\x64\x61tFragment\x18\x02 \x01(\x0b\x32\x15.grpcComm.DatFragment\"^\n\nGetRequest\x12$\n\x08metaData\x18\x01 \x01(\x0b\x32\x12.grpcComm.MetaData\x12*\n\x0bqueryParams\x18\x02 \x01(\x0b\x32\x15.grpcComm.QueryParams\"/\n\x0bQueryParams\x12\x10\n\x08\x66rom_utc\x18\x01 \x01(\t\x12\x0e\n\x06to_utc\x18\x02 \x01(\t\"B\n\x08MetaData\x12\x0c\n\x04uuid\x18\x01 \x01(\t\x12\x15\n\rnumOfFragment\x18\x02 \x01(\x05\x12\x11\n\tmediaType\x18\x03 \x01(\x05\"2\n\x0b\x44\x61tFragment\x12\x15\n\rtimestamp_utc\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c*-\n\nStatusCode\x12\x0b\n\x07Unknown\x10\x00\x12\x06\n\x02Ok\x10\x01\x12\n\n\x06\x46\x61iled\x10\x02\x32\x99\x02\n\x14\x43ommunicationService\x12\x35\n\nputHandler\x12\x11.grpcComm.Request\x1a\x12.grpcComm.Response(\x01\x12\x35\n\ngetHandler\x12\x11.grpcComm.Request\x1a\x12.grpcComm.Response0\x01\x12-\n\x04ping\x12\x11.grpcComm.Request\x1a\x12.grpcComm.Response\x12\x30\n\x07\x61skVote\x12\x11.grpcComm.Request\x1a\x12.grpcComm.Response\x12\x32\n\tsetLeader\x12\x11.grpcComm.Request\x1a\x12.grpcComm.ResponseB#\n\x14\x63om.cmpe275.grpcCommB\tDataProtoP\x01\x62\x06proto3')
 )
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _STATUSCODE = _descriptor.EnumDescriptor(
   name='StatusCode',
@@ -70,42 +69,42 @@ _REQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='toReceiver', full_name='grpcComm.Request.toReceiver', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='originalSender', full_name='grpcComm.Request.originalSender', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='ping', full_name='grpcComm.Request.ping', index=3,
       number=6, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='putRequest', full_name='grpcComm.Request.putRequest', index=4,
       number=7, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='getRequest', full_name='grpcComm.Request.getRequest', index=5,
       number=8, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -139,28 +138,28 @@ _RESPONSE = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='msg', full_name='grpcComm.Response.msg', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='metaData', full_name='grpcComm.Response.metaData', index=2,
       number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='datFragment', full_name='grpcComm.Response.datFragment', index=3,
       number=4, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -191,7 +190,7 @@ _PINGREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -222,14 +221,14 @@ _PUTREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='datFragment', full_name='grpcComm.PutRequest.datFragment', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -260,14 +259,14 @@ _GETREQUEST = _descriptor.Descriptor(
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='queryParams', full_name='grpcComm.GetRequest.queryParams', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -298,14 +297,14 @@ _QUERYPARAMS = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='to_utc', full_name='grpcComm.QueryParams.to_utc', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -336,21 +335,21 @@ _METADATA = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='numOfFragment', full_name='grpcComm.MetaData.numOfFragment', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='mediaType', full_name='grpcComm.MetaData.mediaType', index=2,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -381,14 +380,14 @@ _DATFRAGMENT = _descriptor.Descriptor(
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='data', full_name='grpcComm.DatFragment.data', index=1,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -433,6 +432,7 @@ DESCRIPTOR.message_types_by_name['QueryParams'] = _QUERYPARAMS
 DESCRIPTOR.message_types_by_name['MetaData'] = _METADATA
 DESCRIPTOR.message_types_by_name['DatFragment'] = _DATFRAGMENT
 DESCRIPTOR.enum_types_by_name['StatusCode'] = _STATUSCODE
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Request = _reflection.GeneratedProtocolMessageType('Request', (_message.Message,), dict(
   DESCRIPTOR = _REQUEST,
@@ -493,160 +493,64 @@ _sym_db.RegisterMessage(DatFragment)
 
 DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('\n\024com.cmpe275.grpcCommB\tDataProtoP\001'))
-try:
-  # THESE ELEMENTS WILL BE DEPRECATED.
-  # Please use the generated *_pb2_grpc.py files instead.
-  import grpc
-  from grpc.framework.common import cardinality
-  from grpc.framework.interfaces.face import utilities as face_utilities
-  from grpc.beta import implementations as beta_implementations
-  from grpc.beta import interfaces as beta_interfaces
 
+_COMMUNICATIONSERVICE = _descriptor.ServiceDescriptor(
+  name='CommunicationService',
+  full_name='grpcComm.CommunicationService',
+  file=DESCRIPTOR,
+  index=0,
+  options=None,
+  serialized_start=825,
+  serialized_end=1106,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='putHandler',
+    full_name='grpcComm.CommunicationService.putHandler',
+    index=0,
+    containing_service=None,
+    input_type=_REQUEST,
+    output_type=_RESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='getHandler',
+    full_name='grpcComm.CommunicationService.getHandler',
+    index=1,
+    containing_service=None,
+    input_type=_REQUEST,
+    output_type=_RESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='ping',
+    full_name='grpcComm.CommunicationService.ping',
+    index=2,
+    containing_service=None,
+    input_type=_REQUEST,
+    output_type=_RESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='askVote',
+    full_name='grpcComm.CommunicationService.askVote',
+    index=3,
+    containing_service=None,
+    input_type=_REQUEST,
+    output_type=_RESPONSE,
+    options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='setLeader',
+    full_name='grpcComm.CommunicationService.setLeader',
+    index=4,
+    containing_service=None,
+    input_type=_REQUEST,
+    output_type=_RESPONSE,
+    options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_COMMUNICATIONSERVICE)
 
-  class CommunicationServiceStub(object):
+DESCRIPTOR.services_by_name['CommunicationService'] = _COMMUNICATIONSERVICE
 
-    def __init__(self, channel):
-      """Constructor.
-
-      Args:
-        channel: A grpc.Channel.
-      """
-      self.putHandler = channel.stream_unary(
-          '/grpcComm.CommunicationService/putHandler',
-          request_serializer=Request.SerializeToString,
-          response_deserializer=Response.FromString,
-          )
-      self.getHandler = channel.unary_stream(
-          '/grpcComm.CommunicationService/getHandler',
-          request_serializer=Request.SerializeToString,
-          response_deserializer=Response.FromString,
-          )
-      self.ping = channel.unary_unary(
-          '/grpcComm.CommunicationService/ping',
-          request_serializer=Request.SerializeToString,
-          response_deserializer=Response.FromString,
-          )
-
-
-  class CommunicationServiceServicer(object):
-
-    def putHandler(self, request_iterator, context):
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-    def getHandler(self, request, context):
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-    def ping(self, request, context):
-      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-      context.set_details('Method not implemented!')
-      raise NotImplementedError('Method not implemented!')
-
-
-  def add_CommunicationServiceServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-        'putHandler': grpc.stream_unary_rpc_method_handler(
-            servicer.putHandler,
-            request_deserializer=Request.FromString,
-            response_serializer=Response.SerializeToString,
-        ),
-        'getHandler': grpc.unary_stream_rpc_method_handler(
-            servicer.getHandler,
-            request_deserializer=Request.FromString,
-            response_serializer=Response.SerializeToString,
-        ),
-        'ping': grpc.unary_unary_rpc_method_handler(
-            servicer.ping,
-            request_deserializer=Request.FromString,
-            response_serializer=Response.SerializeToString,
-        ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-        'grpcComm.CommunicationService', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
-
-
-  class BetaCommunicationServiceServicer(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    def putHandler(self, request_iterator, context):
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-    def getHandler(self, request, context):
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-    def ping(self, request, context):
-      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
-
-
-  class BetaCommunicationServiceStub(object):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This class was generated
-    only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0."""
-    def putHandler(self, request_iterator, timeout, metadata=None, with_call=False, protocol_options=None):
-      raise NotImplementedError()
-    putHandler.future = None
-    def getHandler(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      raise NotImplementedError()
-    def ping(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
-      raise NotImplementedError()
-    ping.future = None
-
-
-  def beta_create_CommunicationService_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_deserializers = {
-      ('grpcComm.CommunicationService', 'getHandler'): Request.FromString,
-      ('grpcComm.CommunicationService', 'ping'): Request.FromString,
-      ('grpcComm.CommunicationService', 'putHandler'): Request.FromString,
-    }
-    response_serializers = {
-      ('grpcComm.CommunicationService', 'getHandler'): Response.SerializeToString,
-      ('grpcComm.CommunicationService', 'ping'): Response.SerializeToString,
-      ('grpcComm.CommunicationService', 'putHandler'): Response.SerializeToString,
-    }
-    method_implementations = {
-      ('grpcComm.CommunicationService', 'getHandler'): face_utilities.unary_stream_inline(servicer.getHandler),
-      ('grpcComm.CommunicationService', 'ping'): face_utilities.unary_unary_inline(servicer.ping),
-      ('grpcComm.CommunicationService', 'putHandler'): face_utilities.stream_unary_inline(servicer.putHandler),
-    }
-    server_options = beta_implementations.server_options(request_deserializers=request_deserializers, response_serializers=response_serializers, thread_pool=pool, thread_pool_size=pool_size, default_timeout=default_timeout, maximum_timeout=maximum_timeout)
-    return beta_implementations.server(method_implementations, options=server_options)
-
-
-  def beta_create_CommunicationService_stub(channel, host=None, metadata_transformer=None, pool=None, pool_size=None):
-    """The Beta API is deprecated for 0.15.0 and later.
-
-    It is recommended to use the GA API (classes and functions in this
-    file not marked beta) for all further purposes. This function was
-    generated only to ease transition from grpcio<0.15.0 to grpcio>=0.15.0"""
-    request_serializers = {
-      ('grpcComm.CommunicationService', 'getHandler'): Request.SerializeToString,
-      ('grpcComm.CommunicationService', 'ping'): Request.SerializeToString,
-      ('grpcComm.CommunicationService', 'putHandler'): Request.SerializeToString,
-    }
-    response_deserializers = {
-      ('grpcComm.CommunicationService', 'getHandler'): Response.FromString,
-      ('grpcComm.CommunicationService', 'ping'): Response.FromString,
-      ('grpcComm.CommunicationService', 'putHandler'): Response.FromString,
-    }
-    cardinalities = {
-      'getHandler': cardinality.Cardinality.UNARY_STREAM,
-      'ping': cardinality.Cardinality.UNARY_UNARY,
-      'putHandler': cardinality.Cardinality.STREAM_UNARY,
-    }
-    stub_options = beta_implementations.stub_options(host=host, metadata_transformer=metadata_transformer, request_serializers=request_serializers, response_deserializers=response_deserializers, thread_pool=pool, thread_pool_size=pool_size)
-    return beta_implementations.dynamic_stub(channel, 'grpcComm.CommunicationService', cardinalities, options=stub_options)
-except ImportError:
-  pass
 # @@protoc_insertion_point(module_scope)

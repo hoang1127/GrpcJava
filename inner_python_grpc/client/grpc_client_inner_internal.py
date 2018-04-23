@@ -1,7 +1,7 @@
 import sys
 sys.path.append('./proto')
 
-import uuid, socket
+import uuid
 import grpc, time
 import inner_data_pb2_grpc
 from inner_data_pb2 import Request, Response, PingRequest, PutRequest, GetRequest, DatFragment, MetaData, QueryParams
@@ -73,7 +73,7 @@ class Client:
     
         req = Request(
             fromSender=self.host + ':' + str(self.port),
-            toReceiver='0.0.0.0:8080',
+            toReceiver='0.0.0.0:8080',  # dont need this
             ping=PingRequest(msg='this is a sample ping request'))
         resp = self.stub.ping(req)
         return resp.msg
@@ -112,27 +112,75 @@ class Client:
         #print resp.msg
         #return resp.datFragment.data
 
-def test(heartbeats, nodes):
+def test(elec_timeout, my_ip):
+    nodes = ['0.0.0.0:8080', '0.0.0.0:8081','0.0.0.0:8082', '0.0.0.0:8083']
+    vote = 0
 
     while True:
-        for i in range(len(nodes)):
-            host = nodes[i].split(':')[0]
-            port = int(nodes[i].split(':')[1])
-            client = Client(host, port)
+        with open('/Users/huynh/Documents/workspace/275final/GrpcJava/inner_python_grpc/info.txt','r') as f:
+            leader = f.read()
         
-            if heartbeats[i] >= 10:
-                print('dead node', i)
+        host = leader.split(':')[0]
+        port = int(leader.split(':')[1])
+        client = Client(host, port)
 
-            else:
-                try:
-                    print(client.ping('heartbeat'))
-                except grpc.RpcError as err:
-                    heartbeats[i] += 1
-                    print(err.details())
+        if elec_timeout < 5:
+            try:
+                print(client.ping('to leader'))
+                elec_timeout = 0
+            except grpc.RpcError as err:
+                elec_timeout += 1
+                print(err.details())
+        
+        else:
+            print('initial leader election')
             
+            for i in range(len(nodes)):
+                hostT = nodes[i].split(':')[0]
+                portT = int(nodes[i].split(':')[1])
+                cli = Client(hostT, portT)
+                pingReq = PingRequest(msg='vote')
+                req = Request(
+                    fromSender=my_ip,
+                    toReceiver=nodes[i],
+                    ping=pingReq)
+                try:
+                    res = cli.stub.askVote(req, timeout=5)
+                    if res.msg == 'ok':
+                        vote += 1
+                    else:
+                        print(res.msg)
+                        elec_timeout = 0
+                        time.sleep(2)
+                        break
+                    print(vote)
+
+                except grpc.RpcError as err:
+                    print(err.details())
+                        
+            if vote >= 3:
+                for i in range(len(nodes)):
+                    hostTT = nodes[i].split(':')[0]
+                    portTT = int(nodes[i].split(':')[1])
+                    cli = Client(hostTT, portTT)
+                    pingReq = PingRequest(msg='im_leader')
+                    req = Request(
+                        fromSender=my_ip,
+                        toReceiver=my_ip,
+                        ping=pingReq)
+
+                    try:
+                        res = cli.stub.setLeader(req, timeout=5)
+                    except grpc.RpcError as err:
+                        print(err.details())
+
+                elec_timeout = 0
+
+            vote = 0
+
         time.sleep(2)
 
 if __name__ == '__main__':
-    nodes = ['0.0.0.0:8080', '0.0.0.0:8081','0.0.0.0:8082', '0.0.0.0:8083']
-    heartbeats = [0,0,0,0]
-    test(heartbeats, nodes)
+    my_ip = sys.argv[1]
+    elec_timeout = 0
+    test(elec_timeout, my_ip)

@@ -22,8 +22,9 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
 
     def __init__(self, role):
         super(CommunicationService, self).__init__()
-        self.nodes = ['0.0.0.0:8081']#, '0.0.0.0:8082', '0.0.0.0:8083']
+        self.nodes = ['0.0.0.0:8080', '0.0.0.0:8081','0.0.0.0:8082', '0.0.0.0:8083']
         self.role = role
+        self.flag = 0
 
     def preprocess(self, fpath):
         """read file and chunkify it to be small batch for grpc transport"""
@@ -58,7 +59,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
         fromSender = request.fromSender
         toReceiver = request.toReceiver
         originalSender = request.originalSender
-        print(fromSender,toReceiver,originalSender)
+        # print(fromSender,toReceiver,originalSender)
 
         response = inner_data_pb2.Response()
         response.msg = 'Ping Success'
@@ -66,7 +67,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
         status_code = 1
         response.Code = status_code
 
-        print "Send Ping response"
+        # print "Send Ping response"
         return response
 
     def putHandler(self, request_iterator, context):
@@ -142,5 +143,31 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
                 datFragment=DatFragment(data=str(line).encode())
             )
             yield response
+        
+    def askVote(self, request, context):
+        print "Receive ask vote request"
+        if self.flag == 0:
+            self.flag = 1
+            res = inner_data_pb2.Response()
+            res.msg = 'ok'
+            return res
+        
+        else: 
+            res = inner_data_pb2.Response()
+            res.msg = 'wait'
+            return res
+
+    def setLeader(self, request, context):
+        print "Receive set leader request"
+        print request
+        self.role = 'leader'
+
+        with open('/Users/huynh/Documents/workspace/275final/GrpcJava/inner_python_grpc/info.txt','w') as f:
+            f.write(request.fromSender)
+
+        res = inner_data_pb2.Response()
+        res.msg = 'success'
+        return res
+
         
 

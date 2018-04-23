@@ -19,6 +19,13 @@ then
     python ./client/grpc_client_inner.py
 fi
 
+if [ $1 = "client_inner_internal" ]
+then
+    echo Input host:port
+    read host_port
+    python ./client/grpc_client_inner_internal.py $host_port
+fi
+
 if [ $1 = "generate" ]
 then
     python -m grpc_tools.protoc -I ./proto --python_out=./proto --grpc_python_out=./proto ./proto/inner_data.proto
