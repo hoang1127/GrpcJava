@@ -21,7 +21,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
 
     def __init__(self, role):
         super(CommunicationService, self).__init__()
-        self.nodes = ['169.254.246.241:8080', '169.254.15.17:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
+        self.nodes = ['169.254.246.241:8080', '169.254.125.86:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
         self.role = role
         self.flag = 0
 
