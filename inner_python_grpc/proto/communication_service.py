@@ -21,7 +21,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
 
     def __init__(self, role):
         super(CommunicationService, self).__init__()
-        self.nodes = ['169.254.246.241:8080', '169.254.125.86:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
+        self.nodes = ['169.254.246.241:8080', '169.254.189.103:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
         self.role = role
         self.flag = 0
 
@@ -72,11 +72,12 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
     def putHandler(self, request_iterator, context):
         if self.role == 'leader':
             for i in self.nodes:
-                print i
-                host = i.split(':')[0]
-                port = int(i.split(':')[1])
-                cli = Client(host, port)
-                cli.stub.putHandler(request_iterator)
+                if i != '169.254.246.241:8080':
+                    print i
+                    host = i.split(':')[0]
+                    port = int(i.split(':')[1])
+                    cli = Client(host, port)
+                    cli.stub.putHandler(request_iterator)
 
         print "Receive put request"
         buffer = []

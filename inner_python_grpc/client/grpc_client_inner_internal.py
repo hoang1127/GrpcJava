@@ -105,14 +105,13 @@ class Client:
         self.port = port
         self.channel = grpc.insecure_channel('%s:%d' % (host, port))
         self.stub = inner_data_pb2_grpc.CommunicationServiceStub(self.channel)
-        with open('info.txt','r') as f:
-            self.leader = f.read()
+
     
 
     def ping(self, data):
     
         req = Request(
-            fromSender=self.leader,
+            fromSender='leader',
             toReceiver=self.host + ':' + str(self.port),  # dont need
             ping=PingRequest(msg='this is a sample ping request'))
         resp = self.stub.ping(req)
@@ -153,15 +152,15 @@ class Client:
         #return resp.datFragment.data
 
 def test(elec_timeout, my_ip):
-    nodes = ['169.254.246.241:8080', '169.254.125.86:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
+    nodes = ['169.254.246.241:8080', '169.254.189.103:8080']#,'0.0.0.0:8082', '0.0.0.0:8083']
     vote = 0
 
     while True:
         with open('info.txt','r') as f:
-            self.leader = f.read()
+            leader = f.read()
         
-        host = self.leader.split(':')[0]
-        port = int(self.leader.split(':')[1])
+        host = leader.split(':')[0]
+        port = int(leader.split(':')[1])
         client = Client(host, port)
 
         if elec_timeout < 5:
