@@ -8,10 +8,11 @@ from mongodb_database import *
 from subprocess import call
 import sys, os
 from datetime import datetime, timedelta
-
+from grpc_client import *
 
 CONST_MEDIA_TYPE_TEXT = 1
 CONST_CHUNK_SIZE = 5  # number of lines per payload
+FORWARDING_THRESHOLD = 1000
 
 class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
 
@@ -86,6 +87,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         print "Receive put request"
         buffer = []
         timestamp = ''
+        threshold = 0
         for request in request_iterator:
             print request
             fromSender = request.fromSender
@@ -103,8 +105,19 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             #else:
                 # Mesowest data
             #    data = self.normalize_data_mesowest(DatFragment.data)
+            threshold = threshold + 1
             buffer.append(data)
-
+            if threshold > FORWARDING_THRESHOLD:
+                client = Client(host='169.254.246.241', port=8080)
+                client.stub.putHandler(request_iterator)
+                break
+                '''
+                file_name = 'forwarding' + '.csv'
+                with open(file_name, 'w') as file:
+                    file.write(str(buffer))
+                    buffer = []
+                call(['python grpc_client.py -x '])
+                '''
         # Save buffer to my mongo database
         print "Saving buffer to mongodb...."
         print "Timestamp is " + str(timestamp)
@@ -123,7 +136,10 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             file.write(str(buffer))
 
         # Call comand to send file to clsuter
+        # call Java client
         call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
+        # call Python client
+
         #os.system('sh ../ProjectCluster/client.sh 1 -write -' + file_name)
 
         # Reponse to server
@@ -160,7 +176,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
         with open(file_name, 'w') as file:
             file.write(str(from_utc) + " to " + str(to_utc))
         call(['../ProjectCluster/client.sh', ' 1 -write -' + file_name])
-        
+
         #from_utc_format = from_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
         #to_utc_format = to_utc.replace('-','').replace(' ','/').replace(':','')[:-2]
 
