@@ -12,7 +12,7 @@ from grpc_client import *
 
 CONST_MEDIA_TYPE_TEXT = 1
 CONST_CHUNK_SIZE = 5  # number of lines per payload
-FORWARDING_THRESHOLD = 1000
+FORWARDING_THRESHOLD = 10000
 
 class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
 
@@ -108,7 +108,7 @@ class CommunicationService(data_pb2_grpc.CommunicationServiceServicer):
             threshold = threshold + 1
             buffer.append(data)
             if threshold > FORWARDING_THRESHOLD:
-                client = Client(host='169.254.246.241', port=8080)
+                client = Client(host='169.254.230.239', port=8080)
                 client.stub.putHandler(request_iterator)
                 break
                 '''

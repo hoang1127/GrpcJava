@@ -164,6 +164,20 @@ def test():
   print(client.put_mesonet('./mesonettest.csv'))
   #print(client.ping())
 
+def process:
+    print(client.put_mesonet(file))
+
+import multiprocessing as mp
+
+def multiple_files_test():
+    import os
+    client = Client()
+    fileList = []
+    for file in os.listdir("/data"):
+        if file.endswith(".csv"):
+            fileList.append(file)
+    pool = mp.Pool(processes=4)
+    results = pool.map(process, fileList)
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
@@ -202,5 +216,5 @@ if __name__ == '__main__':
       print(client.get())
 
   if args.test:
-      test()
+      multiple_files_test()
   #test()
