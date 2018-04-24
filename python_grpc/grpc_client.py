@@ -125,7 +125,7 @@ class Client():
     request_iterator = put_iterator(fpath)
 
     resp = self.stub.putHandler(request_iterator)
-    print("Response code " + resp.Code)
+    print("Response code " + str(resp.Code))
     print(resp.msg)
     #return True
 
