@@ -72,6 +72,7 @@ class CommunicationService(inner_data_pb2_grpc.CommunicationServiceServicer):
     def putHandler(self, request_iterator, context):
         if self.role == 'leader':
             for i in self.nodes:
+                print i
                 host = i.split(':')[0]
                 port = int(i.split(':')[1])
                 cli = Client(host, port)

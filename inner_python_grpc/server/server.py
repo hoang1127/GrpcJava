@@ -35,7 +35,7 @@ if __name__ == '__main__':
   host = sys.argv[1]
   port = int(sys.argv[2])
   role = 'follower'
-  if port == 8080:
+  if port == '169.254.246.241':
     role = 'leader'
     print("Leader")
   run(host, port, role)
