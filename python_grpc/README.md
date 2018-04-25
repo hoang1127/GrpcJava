@@ -1,0 +1,11 @@
+- Install Python 2.7 latest version https://www.python.org/downloads/
+- Install external python package
+-- requests
+-- pymongo
+- Install MongoDB https://docs.mongodb.com/manual/installation/
+- Install Protocol buffer https://developers.google.com/protocol-buffers/
+- Compile data.proto using Python binding: https://developers.google.com/protocol-buffers/docs/pythontutorial
+- Run mongodb on default port
+- Run server.py under python_grpc (python server.py)
+- Server should now be running on port 8080
+
