@@ -56,14 +56,12 @@ public class ClientApp implements CommListener {
 	
 		do {
 			System.out.flush();
-	        System.out.print("\n\n--------------------------------------------\n" +
-	        				"Menu: ** CONNECTED to " + host + ":" + port + " **"
-	        				+ "\n--------------------------------------------\n" +
-	        				"* ping <cluster_id>\n" +
-	        				"* ls\n" +
-							"* leader\n" +
+	        System.out.print("\n\n----------------------------------------\n" +
+	        				"Menu: Host: " + host + ":" + port 
+	        				+ "\n-----------------------------------------\n" +
+	        				"* ping <node_id>\n" +
+	        				"* write <file_name>\n" +
 	                        "* read <file_name>\n" + 
-	                        "* write <file_path>\n" +
 	                        "* quit\n\n\n" +
 	                        "> ");
 	        System.out.flush();
@@ -79,7 +77,7 @@ public class ClientApp implements CommListener {
 				case "leader":
 					RedisServer.getInstance().getLocalhostJedis().select(0);
 					String leader = RedisServer.getInstance().getLocalhostJedis().get(""+RoutingConf.clusterId);
-					System.out.println("Cluster <" + ClientApp.connectedClusterId + "> has current leader node <" + leader + ">");
+					System.out.println("Cluster <" + ClientApp.connectedClusterId + "> has leader node <" + leader + ">");
 					break;
 	          	case "read" :
 	                  if(commands.length > 1)

@@ -1283,11 +1283,6 @@ public final class Work {
     int getSeqId();
   }
   /**
-   * <pre>
-   **
-   * description of the work
-   * </pre>
-   *
    * Protobuf type {@code Task}
    */
   public  static final class Task extends
@@ -1568,11 +1563,6 @@ public final class Work {
       return builder;
     }
     /**
-     * <pre>
-     **
-     * description of the work
-     * </pre>
-     *
      * Protobuf type {@code Task}
      */
     public static final class Builder extends
