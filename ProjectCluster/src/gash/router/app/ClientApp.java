@@ -47,9 +47,7 @@ public class ClientApp implements CommListener {
 	public void onMessage(CommandMessage msg) {
     
     }	
-
 	private void menu() {
-	
 		Scanner scanner = new Scanner(System.in);	 
 		String command = null;
 		String[] commands;
