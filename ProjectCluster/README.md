@@ -1,42 +1,65 @@
 #CMPE275 Team Project
 
-1. Download MySQL 5.7.18 
+#This instruction has been test with MacBook Air, macOS High Sierra 
 
-2. Create a database called “FileDB” with a table named “FileChunk” in MySQL. 
+1. Install MySQL lastest (5.7)
 
-create database FileDB
+2. Login MySQL as root user: 
 
-3. Download Google Protocol Buffer v3.2. 
+        $ mysql -u root -p
 
-4. Build the protobuf files: 
+3. Create a database called “FileDatabase” and create table ChunkData 
 
-	./build_protobuf.sh
+mysql> create database FileDatabase; 
 
-5. Compile all java files using Apache Ant: 
+        mysql> CREATE TABLE ChunkData (
+                fileName varchar(50),
+                chunkID int,
+                data longblob,
+                file_id varchar(50),
+                totalChunks int,
+                Primary Key(fileName, chunkID));
+
+3. Install Google Protocol Buffer v3.2
+
+4. Build protobuf files: 
+
+        ./build_protobuf.sh
+
+5. Compile all java code by Apache Ant: 
 
 	ant build 
 
-6. Start the server : 
+6. Run server : 
 
-	./server.sh config/<node id .conf> 
+        Add the IP(s) in the node1/2/3/4.conf for each node
 
-	Note: the config file must have the ips and ports of all the nodes in the network. 
-7. Start the client: 
+	./server.sh config/<node1/2/3/4.conf> 
 
-	./client.sh <node id>
+        Ex. For node 2:   ./server.sh config/node2.conf 
 
-	The client has 6 operations:   
-	
-        1. ping <cluster id>: ping to a cluster.
+7. Run client: 
+
         
-        2. ls: retrieve a list of all files stored in the server
+	./client.sh <Cluster number>
+
+        Ex. For cluster 1: ./client.sh 1
+
+
+8. Ping to other node in the network with IP:
+
+        ping <node id>
         
-        3. leader: get leader’s ip and port from redis server
+9. Push a file from local directory to the cluster. All nodes from this cluster will save the file to their database.
+
+        write <fileName>
         
-        4. read <fileName> : retrieve a file from the network.
+10. Retrieve file from the database
+
+        read <fileName> 
         
-        5. write <fileName>:  upload a file from the client’s project directory to the network.
-        
-        6. quit: exit the client.
+11. Exit the client
+
+        quit
 
 
