@@ -10,7 +10,7 @@ import java.util.Hashtable;
 
 import com.google.protobuf.ByteString;
 
-import gash.router.server.storage.ClassFileChunkRecord;
+import gash.router.server.storage.ChunkFileClass;
 import pipe.common.Common.Chunk;
 import pipe.common.Common.ChunkLocation;
 import pipe.common.Common.Header;
@@ -168,14 +168,14 @@ public class MessageUtil {
 	}
 	
 	public static ReadResponse.Builder buildReadResponseAllFiles(int fileId, String name, int noChunks, 
-			ArrayList<ClassFileChunkRecord> fileList, Chunk.Builder chunk) {
+			ArrayList<ChunkFileClass> fileList, Chunk.Builder chunk) {
 		ReadResponse.Builder rr = ReadResponse.newBuilder();
 		if (fileId != -1) rr.setFileId(Integer.toString(fileId));
 		rr.setFilename(name);
 		if (noChunks != -1) rr.setNumOfChunks(noChunks);
 		String s= "";
 		if (fileList != null) {
-			for(ClassFileChunkRecord file: fileList) {
+			for(ChunkFileClass file: fileList) {
 				s += file.getFileName()+":"+file.getChunkID();
 				s += ";";
 			}

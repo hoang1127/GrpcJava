@@ -5,18 +5,18 @@ package gash.router.server.storage;
 
 
 public class TestSQLOperations {
-    private MySQLStorage mySQLStorage;
+    private SaveDB SaveDB;
 
     public TestSQLOperations() {
-        this.mySQLStorage = new MySQLStorage();
+        this.SaveDB = new SaveDB();
     }
 
     public void createTable() throws Exception {
-        mySQLStorage.createTable();
+        SaveDB.createTable();
     }
 
     public void dropTable() throws Exception {
-        mySQLStorage.dropTable();
+        SaveDB.dropTable();
     }
     
     public void insertRecordFileChunk(int chunkId) throws Exception {
@@ -29,23 +29,23 @@ public class TestSQLOperations {
         byte[] data = temp.getBytes();
         int TotalChunks = 10;
         String file_id = "Just for testing.";
-        mySQLStorage.insertRecordFileChunk(fileName, chunkID, data, TotalChunks, file_id);
+        SaveDB.insertRecordFileChunk(fileName, chunkID, data, TotalChunks, file_id);
 
     }
 
     public void selectRecordFileChunk() throws Exception {
         String fileName = "test.txt";
         int chunkID = 0;
-        ClassFileChunkRecord result = mySQLStorage.selectRecordFileChunk(fileName, chunkID);
+        ChunkFileClass result = SaveDB.selectRecordFileChunk(fileName, chunkID);
         System.out.println("Selecting results: " + result);
     }
 
     public void tearDown() throws Exception {
-        this.mySQLStorage.dropTable();
+        this.SaveDB.dropTable();
     }
     
     public void checkFileExist(String fname) {
-    	boolean answer = this.mySQLStorage.checkFileExist("files/simplefile.txt");
+    	boolean answer = this.SaveDB.checkFileExist("files/simplefile.txt");
     	System.out.println("checkFileExist(\"" + fname + "\") = " + answer);
     }
 }

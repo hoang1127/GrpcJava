@@ -30,7 +30,7 @@ import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.raft.RaftHandler;
 import gash.router.server.tasks.NoOpBalancer;
 import gash.router.server.tasks.TaskList;
-import gash.router.server.storage.MySQLStorage;
+import gash.router.server.storage.SaveDB;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -46,7 +46,7 @@ public class MessageServer {
 	protected RoutingConf conf;
 	protected boolean background = false;
 
-	public MySQLStorage mySQLStorage = null;
+	public SaveDB SaveDB = null;
 	public static int threadLimit = 0;
 	public static EdgeMonitor emon = null;
 	/**
@@ -114,7 +114,7 @@ public class MessageServer {
 		try {
 			byte[] raw = new byte[(int) cfg.length()];
 			
-			mySQLStorage = new MySQLStorage();
+			SaveDB = new SaveDB();
 			
 			br = new BufferedInputStream(new FileInputStream(cfg));
 			br.read(raw);

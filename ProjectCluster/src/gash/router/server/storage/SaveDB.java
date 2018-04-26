@@ -1,5 +1,5 @@
 /**
- * MySQLStorage.java
+ * SaveDB.java
  */
 
 package gash.router.server.storage;
@@ -15,21 +15,21 @@ import java.sql.*;
 import java.util.ArrayList;
 
 
-public class MySQLStorage {
+public class SaveDB {
     protected static Logger logger = LoggerFactory.getLogger("MySQL");
 
     public static Connection conn;
-    public static MySQLStorage instance;
+    public static SaveDB instance;
     
 
-    public MySQLStorage() {
+    public SaveDB() {
         init();
         instance = this;
     }
     
-    public static MySQLStorage getInstance() {
+    public static SaveDB getInstance() {
         if (instance == null) {
-            instance = new MySQLStorage();
+            instance = new SaveDB();
         }
         return instance;
     }
@@ -297,7 +297,7 @@ public class MySQLStorage {
             logger.info("No record to select.");
             return false;
         }
-        ArrayList<ClassFileChunkRecord> arrayList = new ArrayList<ClassFileChunkRecord>();
+        ArrayList<ChunkFileClass> arrayList = new ArrayList<ChunkFileClass>();
         try {
             // TODO complete code to use JDBC
             if (conn != null){
@@ -345,7 +345,7 @@ public class MySQLStorage {
             logger.info("No record to select.");
             return false;
         }
-        ArrayList<ClassFileChunkRecord> arrayList = new ArrayList<ClassFileChunkRecord>();
+        ArrayList<ChunkFileClass> arrayList = new ArrayList<ChunkFileClass>();
         try {
             // TODO complete code to use JDBC
             if (conn != null){
@@ -438,13 +438,13 @@ public class MySQLStorage {
         return null;
     }
     
-    public ClassFileChunkRecord selectRecordFileChunk(String fileName, int chunkID) {
+    public ChunkFileClass selectRecordFileChunk(String fileName, int chunkID) {
 
         if (fileName == null || fileName.length() == 0) {
             logger.info("No record to select.");
             return null;
         }
-        ArrayList<ClassFileChunkRecord> arrayList = new ArrayList<ClassFileChunkRecord>();
+        ArrayList<ChunkFileClass> arrayList = new ArrayList<ChunkFileClass>();
         
         try {
             if (conn != null){
@@ -472,7 +472,7 @@ public class MySQLStorage {
                     System.out.println(file_id_Print); // should print out "4"'     file_id
                     int totalNoOfChunksPrint = rs.getInt(5);
                     System.out.println(totalNoOfChunksPrint); // should print out "5"'      TotalChunks
-                    arrayList.add(new ClassFileChunkRecord(fileNamePrint, chunkIDPrint, databyte, totalNoOfChunksPrint, file_id_Print));
+                    arrayList.add(new ChunkFileClass(fileNamePrint, chunkIDPrint, databyte, totalNoOfChunksPrint, file_id_Print));
                 }
                 return arrayList.get(0);
             }
@@ -499,9 +499,9 @@ public class MySQLStorage {
     
     
     
-    public ArrayList<ClassFileChunkRecord> selectAllRecordsFileChunk() {
+    public ArrayList<ChunkFileClass> selectAllRecordsFileChunk() {
 
-        ArrayList<ClassFileChunkRecord> arrayList = new ArrayList<ClassFileChunkRecord>();
+        ArrayList<ChunkFileClass> arrayList = new ArrayList<ChunkFileClass>();
         try {
         	if (conn != null){
                 System.out.println("Connection successful!");
@@ -517,7 +517,7 @@ public class MySQLStorage {
                         String fileNamePrint = rs.getString(1);
                         int chunkIDPrint = rs.getInt(2);
                         
-                        arrayList.add(new ClassFileChunkRecord(fileNamePrint, chunkIDPrint));
+                        arrayList.add(new ChunkFileClass(fileNamePrint, chunkIDPrint));
                     }
                 }
 

@@ -1,6 +1,5 @@
 /**
- * 
- * ClassFileChunkRecord.java
+ * ChunkFileClass.java
  */
 
 package gash.router.server.storage;
@@ -8,45 +7,49 @@ package gash.router.server.storage;
 import java.util.Arrays;
 
 
-public class ClassFileChunkRecord {
-    private String fileName;
+public class ChunkFileClass {
+   
     private int chunkID;
-    private byte[] data;
     private int TotalChunks;
+    private String file_name;
     private String file_id;
+    private byte[] data;
 
-    public ClassFileChunkRecord(String fileName, int chunkID, byte[] data, int TotalChunks, String file_id) {
-        this.fileName = fileName;
-        this.chunkID = chunkID;
+    public ChunkFileClass(String file_name, int chunkID, byte[] data, int TotalChunks, String file_id) {
         this.data = data;
-        this.TotalChunks = TotalChunks;
+        this.chunkID = chunkID;
         this.file_id = file_id;
+        this.file_name = file_name;
+        this.TotalChunks = TotalChunks;
+        
     }
 
-    public ClassFileChunkRecord(String fileName, int chunkID, byte[] data, int TotalChunks) {
-        this.fileName = fileName;
-        this.chunkID = chunkID;
+    public ChunkFileClass(String file_name, int chunkID, byte[] data, int TotalChunks) {
         this.data = data;
+        this.chunkID = chunkID;
+        this.file_name = file_name;
         this.TotalChunks = TotalChunks;
     }
 
-    public ClassFileChunkRecord(String fileName, int chunkID, byte[] data) {
-        this.fileName = fileName;
-        this.chunkID = chunkID;
+    public ChunkFileClass(String file_name, int chunkID, byte[] data) {
         this.data = data;
+        this.file_name = file_name;
+        this.chunkID = chunkID;
+        
     }
 
-    public ClassFileChunkRecord(String fileName, int chunkID) {
-        this.fileName = fileName;
+    public ChunkFileClass(String file_name, int chunkID) {
         this.chunkID = chunkID;
+        this.file_name = file_name;
+        
     }
 
     public String getFileName() {
-        return fileName;
+        return file_name;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFileName(String file_name) {
+        this.file_name = file_name;
     }
 
     public int getChunkID() {
@@ -84,11 +87,10 @@ public class ClassFileChunkRecord {
     @Override
     public String toString() {
         return "FileChunk {" +
-                "fileName='" + fileName + '\'' +
+                "fileName='" + file_name + '\'' +
                 ", chunkID=" + chunkID +
                 ", data=" + Arrays.toString(data) +
                 ", TotalChunks=" + TotalChunks +
-                ", file_id='" + file_id + '\'' +
-                '}';
+                ", file_id='" + file_id + '\'' + '}';
     }
 }

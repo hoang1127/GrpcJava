@@ -6,8 +6,8 @@ import gash.router.server.ServerState;
 import gash.router.server.edges.EdgeInfo;
 import gash.router.server.raft.MessageUtil;
 import gash.router.server.raft.RaftHandler;
-import gash.router.server.storage.ClassFileChunkRecord;
-import gash.router.server.storage.MySQLStorage;
+import gash.router.server.storage.ChunkFileClass;
+import gash.router.server.storage.SaveDB;
 import io.netty.channel.Channel;
 
 import java.net.InetAddress;
@@ -72,12 +72,12 @@ public class CommandSession implements Session, Runnable{
             	if (type == TaskType.REQUESTREADFILE) {
             	
             		logger.info("read fileName is " + fname);
-            		MySQLStorage mySQLStorage = MySQLStorage.getInstance();
+            		SaveDB saveDB = SaveDB.getInstance();
             		
             		// If the fname exists on the server.
             		if (fname.equals("ls_all_the_files_and_chunks")) {
             			
-            			ArrayList<ClassFileChunkRecord> fileList = mySQLStorage.selectAllRecordsFileChunk();
+            			ArrayList<ChunkFileClass> fileList = saveDB.selectAllRecordsFileChunk();
                 		//return to client a HashMap of locations
             			CommandMessage cm = MessageUtil.buildCommandMessage(
             					MessageUtil.buildHeader(conf.getNodeId(), System.currentTimeMillis()),
@@ -89,7 +89,7 @@ public class CommandSession implements Session, Runnable{
 
                 		channel.writeAndFlush(cm);
                 		
-            		} else if (mySQLStorage.checkFileExist(fname)) {
+            		} else if (saveDB.checkFileExist(fname)) {
             			// The first time to receive the message from the client. 
             			// The client says that "I want to read the file whose name is fname." chunkID in the request will be -1.
             			int chunkId = msg.getRequest().getRrb().getChunkId();
@@ -100,7 +100,7 @@ public class CommandSession implements Session, Runnable{
 
                 			// Get all the chunkIDs of the file from the database on the leader. 
                 			// All the nodes have the same data and we just return the records on the leader.
-                			ArrayList<Integer> chunkIDArray = mySQLStorage.selectRecordFilenameChunkID(fname);
+                			ArrayList<Integer> chunkIDArray = saveDB.selectRecordFilenameChunkID(fname);
                     		logger.info("The first time to receive the read request from client, and server will return a location String");
                 			String host = "";
                 			try {
@@ -153,12 +153,10 @@ public class CommandSession implements Session, Runnable{
                     	
                     	//ask for chunk data
                     	} else {
-                    		// The second time to receive the message from the client which has received the HashMap<chunkID, location> from the server (Only one location of each chunk).
-                    		// The client say that "I want to get the data of chunkId from the location."
-                			mySQLStorage = MySQLStorage.getInstance();
+                  			saveDB = SaveDB.getInstance();
                 			String fileName = msg.getRequest().getRrb().getFilename();
                 			int chunkID = msg.getRequest().getRrb().getChunkId();
-                			ClassFileChunkRecord record = mySQLStorage.selectRecordFileChunk(fileName, chunkID);
+                			ChunkFileClass record = saveDB.selectRecordFileChunk(fileName, chunkID);
                 			byte[] chunkData = record.getData();
                 			int chunkSize = record.getTotalNoOfChunks();
 
@@ -189,7 +187,7 @@ public class CommandSession implements Session, Runnable{
             	/**************** WRITE ****************/
             	else if (type.equals(TaskType.REQUESTWRITEFILE)) {
             		
-            		MySQLStorage mySQLStorage = MySQLStorage.getInstance();
+            		SaveDB saveDB = SaveDB.getInstance();
             		WriteBody wb = msg.getRequest().getRwb();
             		fname = wb.getFilename();
     	    		int chunkId = wb.getChunk().getChunkId();
@@ -197,7 +195,7 @@ public class CommandSession implements Session, Runnable{
     	    		
             		if(conf.getNodeId() == RaftHandler.getInstance().getLeaderNodeId()) {
             			//add into channels table
-    					if (!mySQLStorage.checkFileChunkExist(fname, chunkId)) {
+    					if (!saveDB.checkFileChunkExist(fname, chunkId)) {
     						//if it is not write before
     						
 	    					if ((nodeId % 10) == RoutingConf.clusterId) { 
@@ -246,9 +244,9 @@ public class CommandSession implements Session, Runnable{
     	    		}
     	    		
             		// If the file and chunkid already in server.
-            		if (!mySQLStorage.checkFileChunkExist(fname, chunkId)) {
+            		if (!saveDB.checkFileChunkExist(fname, chunkId)) {
             			
-	    	    		boolean result = mySQLStorage.insertRecordFileChunk(fname, chunkId, data, numOfChunk, fileId);
+	    	    		boolean result = saveDB.insertRecordFileChunk(fname, chunkId, data, numOfChunk, fileId);
 	    	    		logger.info("Writing the file <" + fname + "> with its chunk_id <"+ chunkId+ "> out of <"+numOfChunk+"> into DB.");
 	    	    		
 	    	    		if (result) {
