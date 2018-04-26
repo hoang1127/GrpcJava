@@ -12,22 +12,22 @@ public class ClassFileChunkRecord {
     private String fileName;
     private int chunkID;
     private byte[] data;
-    private int totalNoOfChunks;
+    private int TotalChunks;
     private String file_id;
 
-    public ClassFileChunkRecord(String fileName, int chunkID, byte[] data, int totalNoOfChunks, String file_id) {
+    public ClassFileChunkRecord(String fileName, int chunkID, byte[] data, int TotalChunks, String file_id) {
         this.fileName = fileName;
         this.chunkID = chunkID;
         this.data = data;
-        this.totalNoOfChunks = totalNoOfChunks;
+        this.TotalChunks = TotalChunks;
         this.file_id = file_id;
     }
 
-    public ClassFileChunkRecord(String fileName, int chunkID, byte[] data, int totalNoOfChunks) {
+    public ClassFileChunkRecord(String fileName, int chunkID, byte[] data, int TotalChunks) {
         this.fileName = fileName;
         this.chunkID = chunkID;
         this.data = data;
-        this.totalNoOfChunks = totalNoOfChunks;
+        this.TotalChunks = TotalChunks;
     }
 
     public ClassFileChunkRecord(String fileName, int chunkID, byte[] data) {
@@ -66,11 +66,11 @@ public class ClassFileChunkRecord {
     }
 
     public int getTotalNoOfChunks() {
-        return totalNoOfChunks;
+        return TotalChunks;
     }
 
-    public void setTotalNoOfChunks(int totalNoOfChunks) {
-        this.totalNoOfChunks = totalNoOfChunks;
+    public void setTotalNoOfChunks(int TotalChunks) {
+        this.TotalChunks = TotalChunks;
     }
 
     public String getFile_id() {
@@ -87,7 +87,7 @@ public class ClassFileChunkRecord {
                 "fileName='" + fileName + '\'' +
                 ", chunkID=" + chunkID +
                 ", data=" + Arrays.toString(data) +
-                ", totalNoOfChunks=" + totalNoOfChunks +
+                ", TotalChunks=" + TotalChunks +
                 ", file_id='" + file_id + '\'' +
                 '}';
     }

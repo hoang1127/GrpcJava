@@ -61,8 +61,8 @@ public class DemoApp implements CommListener {
 	}
 
 	//upload file to server
-	private void chunkAndSend(String fname){
-		mc.chunkAndSend(fname);
+	private void splitFileAndProcess(String fname){
+		mc.splitFileAndProcess(fname);
 	}
 
 
@@ -79,7 +79,7 @@ public class DemoApp implements CommListener {
 			MessageClient mc = new MessageClient(host, port);
 			DemoApp da = new DemoApp(mc);
 			// do stuff w/ the connection
-			da.chunkAndSend(fname);
+			da.splitFileAndProcess(fname);
 			System.out.println("\n** exiting in 10 seconds. **");
 			System.out.flush();
 			Thread.sleep(10 * 1000);

@@ -83,7 +83,7 @@ public class ClientApp implements CommListener {
 	                  break;
 	          	case "write" :
 	                  if(commands.length > 1)
-	                	  mc.chunkAndSend(commands[1]);
+	                	  mc.splitFileAndProcess(commands[1]);
 	                  break;
 	          	case "ls" :
 	                	  mc.lsFiles();
@@ -113,7 +113,7 @@ public class ClientApp implements CommListener {
 				port = Integer.parseInt(leader.split(":")[1]);
 			} else{
 				host = "localhost";
-				port = 4168;
+				port = 5510;
 			}
 			try {
 				MessageClient mc = new MessageClient(host, port);

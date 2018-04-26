@@ -94,7 +94,7 @@ public class MessageClient {
 		}
 	}
 	
-	public void chunkAndSend(String fname){
+	public void splitFileAndProcess(String fname){
 		File file = new File(fname);
 		FileInputStream fis;
 
@@ -118,7 +118,6 @@ public class MessageClient {
 				file_size -= read;
 				assert (read == byteChunk.length);
 				
-				// get hash key for store, to do
 				logger.info("Current chunkId is " + chunkId);
 				CommandMessage cm = MessageUtil.buildCommandMessage(MessageUtil.buildHeader(999,System.currentTimeMillis()),null,
 						MessageUtil.buildRequest(TaskType.REQUESTWRITEFILE, MessageUtil.buildWriteBody(-1,fname,"txt",

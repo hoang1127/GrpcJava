@@ -18,7 +18,7 @@ import java.util.HashSet;
 
 public class MergeWorker implements Runnable{
 	protected static Logger logger = LoggerFactory.getLogger("MergeWorker");
-    private int totalNoOfChunks;
+    private int totalChunks;
     private static HashMap<Integer,byte[]> chunkIdDataMap;
     private static HashSet<Integer> chunkIdSet;
     public int num;
@@ -37,7 +37,7 @@ public class MergeWorker implements Runnable{
 
     public MergeWorker() {
         mergeWorker = this;
-//        this.totalNoOfChunks = chunkNum;
+
         chunkIdDataMap = new HashMap<Integer, byte[]>();
         chunkIdSet = new HashSet<Integer>();
         num = 0;
@@ -61,7 +61,7 @@ public class MergeWorker implements Runnable{
                 currentChunkId++;
             }
 
-            if(currentChunkId != 0 && currentChunkId == totalNoOfChunks)
+            if(currentChunkId != 0 && currentChunkId == totalChunks)
                 successMerge = true;
             
             try { Thread.sleep(200); } catch (Exception e){ e.printStackTrace();}
@@ -69,8 +69,8 @@ public class MergeWorker implements Runnable{
         getFile(file, filename);
     }
 
-    public void setTotalNoOfChunks(int num) {
-        totalNoOfChunks = num;
+    public void setTotalChunks(int num) {
+        totalChunks = num;
     }
 
     /**
@@ -115,7 +115,6 @@ public class MergeWorker implements Runnable{
 		        System.out.println("downloads directory created");  
 		    }
 		}
-    	
     	
         System.out.println("Merge complete, return the file into ./downloads directory");
 

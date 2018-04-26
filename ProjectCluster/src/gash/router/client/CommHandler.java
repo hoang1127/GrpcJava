@@ -86,7 +86,6 @@ public class CommHandler extends SimpleChannelInboundHandler<CommandMessage> {
 	 */
 	public void handleMessage(CommandMessage msg, Channel channel) {
 		if (msg == null) {
-			// TODO add logging
 			System.out.println("ERROR: Unexpected content - " + msg);
 			return;
 
@@ -112,11 +111,9 @@ public class CommHandler extends SimpleChannelInboundHandler<CommandMessage> {
 					return;
 					
 				} else {
-					//first response from server
-					//with ls of the files & chunks
 					int numChunks = msg.getResponse().getReadResponse().getNumOfChunks();
 					mergeWorker = MergeWorker.getMergeWorkerInstance();
-					mergeWorker.setTotalNoOfChunks(numChunks);
+					mergeWorker.setTotalChunks(numChunks);
 					
 					// get the HashMap<chunkID, Location> from the readResponse.
 					List<Common.ChunkLocation> list = msg.getResponse().getReadResponse().getChunkLocationList();

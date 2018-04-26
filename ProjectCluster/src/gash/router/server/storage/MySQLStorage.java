@@ -70,7 +70,7 @@ public class MySQLStorage {
                         "chunkID int,\n" +
                         "data longblob,\n" +
                         "file_id varchar(255),\n" +
-                        "totalNoOfChunks int,\n" +
+                        "TotalChunks int,\n" +
                         "Primary Key(fileName, chunkID)\n" +
                         ");";
                 boolean createResult = stmt.execute(createTable);
@@ -140,7 +140,7 @@ public class MySQLStorage {
         return true;
     }
 
-    public boolean insertRecordFileChunk(String fileName, int chunkID, byte[] data, int totalNoOfChunks, String file_id) {
+    public boolean insertRecordFileChunk(String fileName, int chunkID, byte[] data, int TotalChunks, String file_id) {
 
         if (fileName == null || fileName.length() == 0) {
             logger.info("No record to insert.");
@@ -162,7 +162,7 @@ public class MySQLStorage {
                 statement.setInt(2, chunkID);
                 statement.setBinaryStream(3, new ByteArrayInputStream(data),data.length);
                 statement.setString(4,file_id);
-                statement.setInt(5, totalNoOfChunks);
+                statement.setInt(5, TotalChunks);
 
                 int insertResult = statement.executeUpdate();
                 if (insertResult > 0) {
@@ -240,11 +240,11 @@ public class MySQLStorage {
      * @param fileName
      * @param chunkID
      * @param data
-     * @param totalNoOfChunks
+     * @param TotalChunks
      * @param file_id
      * @return
      */
-    public ResultSet selectRecordFileChunk(String fileName, int chunkID, byte[] data, int totalNoOfChunks, String file_id) {
+    public ResultSet selectRecordFileChunk(String fileName, int chunkID, byte[] data, int TotalChunks, String file_id) {
 
         if (fileName == null || fileName.length() == 0) {
             logger.info("No record to select.");
@@ -471,7 +471,7 @@ public class MySQLStorage {
                     String file_id_Print = rs.getString(4);
                     System.out.println(file_id_Print); // should print out "4"'     file_id
                     int totalNoOfChunksPrint = rs.getInt(5);
-                    System.out.println(totalNoOfChunksPrint); // should print out "5"'      totalNoOfChunks
+                    System.out.println(totalNoOfChunksPrint); // should print out "5"'      TotalChunks
                     arrayList.add(new ClassFileChunkRecord(fileNamePrint, chunkIDPrint, databyte, totalNoOfChunksPrint, file_id_Print));
                 }
                 return arrayList.get(0);

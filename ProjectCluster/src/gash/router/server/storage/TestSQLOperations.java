@@ -27,9 +27,9 @@ public class TestSQLOperations {
         String fileName = "files/input.txt";
         int chunkID = chunkId;
         byte[] data = temp.getBytes();
-        int totalNoOfChunks = 10;
+        int TotalChunks = 10;
         String file_id = "Just for testing.";
-        mySQLStorage.insertRecordFileChunk(fileName, chunkID, data, totalNoOfChunks, file_id);
+        mySQLStorage.insertRecordFileChunk(fileName, chunkID, data, TotalChunks, file_id);
 
     }
 
