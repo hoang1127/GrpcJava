@@ -33,19 +33,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class RoutingConf {
 	private int nodeId;
-	private int commandPort;
 	private int workPort;
-	private boolean internalNode = true;
+	private int commandPort;
 	private int heartbeatDt = 2000;
+	private boolean internalNode = true;
+	
 	private List<RoutingEntry> routing;
 	
-	/************* GLOBAL VARIABLE  ***************/
+	public static String redis = "localhost";
+	public static String dbUser = "root";
+	public static String dbPassword = "root" ;
+
+	public static int maxHops = 10;
 	public static int clusterId = 1; 
 	public static int clientId = clusterId * 10 + clusterId;
-	public static String redis = "localhost";
-	public static int maxHops = 10;
-	public static String mySQLUser = "root";
-	public static String mySQLPwd = "root" ;
+
 	
 	public HashMap<String, Integer> asHashMap() {
 		HashMap<String, Integer> map = new HashMap<String, Integer>();

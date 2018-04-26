@@ -1,24 +1,26 @@
 package gash.router.server.messages;
 
+import io.netty.channel.Channel;
 import gash.router.container.RoutingConf;
 import gash.router.server.CommandHandler;
 import gash.router.server.ServerState;
-import gash.router.server.edges.EdgeInfo;
-import gash.router.server.raft.MessageUtil;
 import gash.router.server.raft.RaftHandler;
 import gash.router.server.storage.ChunkFileClass;
 import gash.router.server.storage.SaveDB;
-import io.netty.channel.Channel;
+import gash.router.server.edges.EdgeInfo;
+import gash.router.server.raft.MessageUtil;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.regex.Pattern;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.ArrayList;
+
 
 import pipe.common.Common;
 import pipe.common.Common.Header;
@@ -29,13 +31,13 @@ import pipe.work.Work.WorkMessage;
 import routing.Pipe.CommandMessage;
 
 
-public class CommandSession implements Session, Runnable{
+public class HandlingClass implements Session, Runnable{
     protected static Logger logger = LoggerFactory.getLogger("server");
     private RoutingConf conf;
     private CommandMessage msg;
     private Channel channel;
 
-    public CommandSession(RoutingConf conf, CommandMessage msg, Channel channel) {
+    public HandlingClass(RoutingConf conf, CommandMessage msg, Channel channel) {
         this.conf = conf;
         this.msg = msg;
         this.channel = channel;
@@ -64,7 +66,7 @@ public class CommandSession implements Session, Runnable{
 
         	}else if (msg.hasRequest()) {
         		
-            	logger.info("CommendSession handleMessage RequestType is " + type);
+            	logger.info("HandlingClass handleMessage RequestType is " + type);
 
     			Hashtable<Integer, String> location = new Hashtable<Integer, String>();
         		String fname = msg.getRequest().getRrb().getFilename();
@@ -98,9 +100,7 @@ public class CommandSession implements Session, Runnable{
             			// if we don't set chunkId in the CommandMessage, its default to be 0;
             			if (!msg.getRequest().getRrb().hasChunkId()) {
 
-                			// Get all the chunkIDs of the file from the database on the leader. 
-                			// All the nodes have the same data and we just return the records on the leader.
-                			ArrayList<Integer> chunkIDArray = saveDB.selectRecordFilenameChunkID(fname);
+                 			ArrayList<Integer> chunkIDArray = saveDB.selectRecordFilenameChunkID(fname);
                     		logger.info("The first time to receive the read request from client, and server will return a location String");
                 			String host = "";
                 			try {

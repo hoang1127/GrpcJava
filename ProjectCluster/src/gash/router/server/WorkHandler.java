@@ -15,7 +15,7 @@
  */
 package gash.router.server;
 
-import gash.router.server.messages.CommandSession;
+import gash.router.server.messages.HandlingClass;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,10 +106,10 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 					if(!QOSWorker.getInstance().getQueue().isEmpty()) {
 						//No clue how to send the channel as a message
 						//The node that steals the work from this node will not be able to talk to the client
-						CommandSession commandSession = ((CommandSession) QOSWorker.getInstance().getQueue().dequeue());
-						if(commandSession != null) {
+						HandlingClass HandlingClass = ((HandlingClass) QOSWorker.getInstance().getQueue().dequeue());
+						if(HandlingClass != null) {
 							
-							Pipe.CommandMessage cMsg = commandSession.getMsg();
+							Pipe.CommandMessage cMsg = HandlingClass.getMsg();
 							if (cMsg.getRequest().getRequestType() == Common.TaskType.REQUESTWRITEFILE) {
 								
 								//The network can only steal write requests
@@ -127,7 +127,7 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 								
 							}else{
 								//The remote node can't stole this task, so put it back on the local node's queue.
-								QOSWorker.getInstance().getQueue().enqueue(commandSession);
+								QOSWorker.getInstance().getQueue().enqueue(HandlingClass);
 							}
 						}
 					}
@@ -137,7 +137,7 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 					logger.info("Stoled work message from node: " + msg.getHeader().getNodeId());
 				}
 				Pipe.CommandMessage cmdMessage = msg.getCmdMessage();
-				Session session1 = new CommandSession(state.getConf(), cmdMessage, channel);
+				Session session1 = new HandlingClass(state.getConf(), cmdMessage, channel);
 				QOSWorker.getInstance().getQueue().enqueue(session1);
 				
 			} else if (msg.hasTask()) {

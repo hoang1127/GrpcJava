@@ -1,6 +1,6 @@
 package gash.router.server.raft;
 
-import gash.router.redis.RedisServer;
+import gash.router.redis.RedisDBServer;
 import gash.router.server.edges.EdgeInfo;
 import pipe.work.Work.WorkMessage;
 
@@ -114,10 +114,10 @@ public class CandidateNode implements NodeState {
 
 	public synchronized void udpateRedis() {
 		//Update redis the leader node
-		RedisServer.getInstance().getLocalhostJedis().select(0);
+		RedisDBServer.getInstance().getjedis().select(0);
 		String host = handler.getHost();
 		int commandPort = handler.getServerState().getConf().getCommandPort();
-		RedisServer.getInstance().getLocalhostJedis().set(String.valueOf(gash.router.container.RoutingConf.clusterId), host +":" + commandPort);
+		RedisDBServer.getInstance().getjedis().set(String.valueOf(gash.router.container.RoutingConf.clusterId), host +":" + commandPort);
 		System.out.println("- Redis updated -");
 	}
 	

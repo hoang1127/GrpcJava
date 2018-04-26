@@ -15,7 +15,7 @@
  */
 package gash.router.server;
 
-import gash.router.server.messages.CommandSession;
+import gash.router.server.messages.HandlingClass;
 import gash.router.server.messages.QOSWorker;
 import gash.router.server.messages.Session;
 
@@ -110,7 +110,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
 					
 			} else if (msg.hasRequest()) {
 				qos = QOSWorker.getInstance();
-				Session session = new CommandSession(conf, msg, channel);
+				Session session = new HandlingClass(conf, msg, channel);
 				qos.getQueue().enqueue(session);
 
 			}

@@ -37,7 +37,7 @@ public class SaveDB {
     public void init() {
 
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/FileDB?&useSSL=true", RoutingConf.mySQLUser, RoutingConf.mySQLPwd);
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/FileDB?&useSSL=true", RoutingConf.dbUser, RoutingConf.dbPassword);
         } catch (SQLException e) {
             e.printStackTrace();
         }
