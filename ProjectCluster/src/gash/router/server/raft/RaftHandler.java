@@ -21,8 +21,9 @@ public class RaftHandler implements Runnable {
 	
 	private ServerState serverState;
 	private int nodeId = -1;
-	private int leaderNodeId = -1;
-	private int currentNodeMode = 1; //1: Follower, 2: Candidate, 3:Leader
+	private int LearderId = -1;
+	//1: Follower, 2: Candidate, 3:Leader
+	private int currentNodeMode = 1; 
 
 	private String host;
 	private int port;
@@ -31,10 +32,10 @@ public class RaftHandler implements Runnable {
 	private long timerStart = 0;
 
 	// This servers states
-	private volatile NodeState nodeState;
-	public NodeState leader;
-	public NodeState candidate;
-	public NodeState follower;
+	private volatile ClassNode ClassNode;
+	public ClassNode leader;
+	public ClassNode candidate;
+	public ClassNode follower;
 
 	public static RaftHandler instance;
 	public Hashtable<String, String> logs = new Hashtable<String, String>();
@@ -54,9 +55,9 @@ public class RaftHandler implements Runnable {
 	
 	public void init() {
 		try {	
-			leader = new LeaderNode(this);
-			candidate = new CandidateNode(this);
-			follower = new FollowerNode(this);
+			leader = new Leader(this);
+			candidate = new Candidate(this);
+			follower = new Follower(this);
 			
 			host = "";
 			try {
@@ -100,7 +101,7 @@ public class RaftHandler implements Runnable {
 			setRandomTimeout();
 			
 			//initially all node will be a follower
-			nodeState = follower;
+			ClassNode = follower;
 			currentNodeMode = 1;
 			
 		} catch (Exception e) {
@@ -118,7 +119,7 @@ public class RaftHandler implements Runnable {
 
 		while (true) {
 			timerStart = System.currentTimeMillis();				
-			nodeState.run();
+			ClassNode.run();
 		}
 
 	}
@@ -182,13 +183,13 @@ public class RaftHandler implements Runnable {
 		return this.host;
 	}
 
-	public synchronized void setNodeState(NodeState state, int mode) {
-		this.nodeState = state;
+	public synchronized void setNodeState(ClassNode state, int mode) {
+		this.ClassNode = state;
 		this.currentNodeMode = mode;
 	}
 
-	public synchronized NodeState getNodeState() {
-		return this.nodeState;
+	public synchronized ClassNode getNodeState() {
+		return this.ClassNode;
 	}
 
 	public synchronized int getNodeMode() {
@@ -211,12 +212,12 @@ public class RaftHandler implements Runnable {
 		return this.term;
 	}
 
-	public synchronized void setLeaderNodeId(int id) {
-		this.leaderNodeId = id;
+	public synchronized void setLearderId(int id) {
+		this.LearderId = id;
 		this.serverState.setLeaderId(id);
 	}
 	
-	public synchronized int getLeaderNodeId() {
-		return this.leaderNodeId;
+	public synchronized int getLearderId() {
+		return this.LearderId;
 	}
 }

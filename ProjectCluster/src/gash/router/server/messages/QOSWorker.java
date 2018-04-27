@@ -54,8 +54,8 @@ public class QOSWorker implements Runnable{
         		try { Thread.sleep(2000); } catch(Exception e){ }
         		
                 RaftHandler raftHandler = RaftHandler.getInstance();
-        		int leaderNodeId = raftHandler.getLeaderNodeId();
-                EdgeInfo ei = raftHandler.getEdgeMonitor().getOutboundEdges().getNode(leaderNodeId);
+        		int LearderId = raftHandler.getLearderId();
+                EdgeInfo ei = raftHandler.getEdgeMonitor().getOutboundEdges().getNode(LearderId);
                 if(ei != null && ei.getChannel() != null) {
                     //All edges for work is this node queue is empty
                     Common.Header.Builder hb = Common.Header.newBuilder();

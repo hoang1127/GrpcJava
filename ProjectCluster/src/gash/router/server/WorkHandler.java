@@ -81,13 +81,13 @@ public class WorkHandler extends SimpleChannelInboundHandler<WorkMessage> {
 				channel.write(rb.build());
 				
 			} else if (msg.hasReqAVote()){				
-				state.getHandler().getNodeState().processReplyAVoteToCandidate(msg);	        	
+				state.getHandler().getNodeState().candidateRespondVote(msg);	        	
 				
 			} else if (msg.hasAVote()){
-				state.getHandler().getNodeState().processHandleAVoteFromFollower(msg);		   
+				state.getHandler().getNodeState().followerVote(msg);		   
 					
 			} else if (msg.hasLeader()) {							
-				state.getHandler().getNodeState().processReplyHeartBeatToLeader(msg);
+				state.getHandler().getNodeState().leaderRespondHeartBeat(msg);
 				
 			} else if (msg.hasANode()) {
 				state.getHandler().getEdgeMonitor().createOutboundIfNew(msg.getHeader().getNodeId(), 

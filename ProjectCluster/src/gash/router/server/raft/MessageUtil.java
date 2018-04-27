@@ -22,6 +22,7 @@ import pipe.common.Common.Response;
 import pipe.common.Common.TaskType;
 import pipe.common.Common.WriteBody;
 import pipe.common.Common.WriteResponse;
+
 import pipe.work.Work.RegisterNode;
 import pipe.election.Election.LeaderStatus;
 import pipe.election.Election.RequestVote;
@@ -243,7 +244,7 @@ public class MessageUtil {
 		Header.Builder hb = Header.newBuilder();
 		hb.setNodeId(nodeId);
 		hb.setTime(time);
-		//hb.setDestination(-1);
+	
 		return hb;
 	}
 	

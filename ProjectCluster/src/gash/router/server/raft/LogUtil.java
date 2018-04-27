@@ -1,7 +1,3 @@
-/*****
- * LogUtil.java
- * 
- */
 
 package gash.router.server.raft;
 
@@ -17,6 +13,7 @@ public class LogUtil {
 		for(String sKey: logs.keySet()) {
 			if (sKey != null && sKey.contains(fname)) {
 				String[] parts = sKey.split(";");
+
 				int chunkSize = Integer.parseInt(parts[2]);
 				int chunkId = Integer.parseInt(parts[1]);
 				

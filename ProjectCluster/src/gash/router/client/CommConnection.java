@@ -154,26 +154,25 @@ public class CommConnection {
 		group = new NioEventLoopGroup();
 		try {
 			CommInit si = new CommInit(null, false);
-			Bootstrap b = new Bootstrap();
-			b.group(group).channel(NioSocketChannel.class).handler(si);
-			b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
-			b.option(ChannelOption.TCP_NODELAY, true);
-			b.option(ChannelOption.SO_KEEPALIVE, true);
+			Bootstrap bt = new Bootstrap();
+			bt.group(group).channel(NioSocketChannel.class).handler(si);
+			bt.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
+
+			bt.option(ChannelOption.TCP_NODELAY, true);
+			bt.option(ChannelOption.SO_KEEPALIVE, true);
 			logger.info("Prepare to connect to the host & port: ");
 			// Make the connection attempt.
-			channel = b.connect(host, port).syncUninterruptibly();
+			channel = bt.connect(host, port).syncUninterruptibly();
 			logger.info("After to connect to the host & port: ");
 
-			// want to monitor the connection to the server s.t. if we loose the
-			// connection, we can try to re-establish it.
 			ClientClosedListener ccl = new ClientClosedListener(this);
 			channel.channel().closeFuture().addListener(ccl);
 
-			System.out.println(channel.channel().localAddress() + " -> open: " + channel.channel().isOpen()
-					+ ", write: " + channel.channel().isWritable() + ", reg: " + channel.channel().isRegistered());
+			System.out.println(channel.channel().localAddress() + " -> Open: " + channel.channel().isOpen()
+					+ ", Write: " + channel.channel().isWritable() + ", Regestry: " + channel.channel().isRegistered());
 
 		} catch (Throwable ex) {
-			logger.error("failed to initialize the client connection", ex);
+			logger.error("Initialize the Client Connection failed", ex);
 			ex.printStackTrace();
 		}
 
@@ -185,7 +184,6 @@ public class CommConnection {
 
 	/**
 	 * create connection to remote server
-	 * 
 	 * @return
 	 */
 	protected Channel connect() {

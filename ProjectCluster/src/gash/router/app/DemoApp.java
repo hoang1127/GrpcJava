@@ -32,24 +32,6 @@ public class DemoApp implements CommListener {
 		this.mc.addListener(this);
 	}
 
-//	private void ping(int N) {
-//		// test round-trip overhead (note overhead for initial connection)
-//		final int maxN = 10;
-//		long[] dt = new long[N];
-//		long st = System.currentTimeMillis(), ft = 0;
-//		for (int n = 0; n < N; n++) {
-//			mc.ping();
-//			ft = System.currentTimeMillis();
-//			dt[n] = ft - st;
-//			st = ft;
-//		}
-//
-//		System.out.println("Round-trip ping times (msec)");
-//		for (int n = 0; n < N; n++)
-//			System.out.print(dt[n] + " ");
-//		System.out.println("");
-//	}
-
 	@Override
 	public String getListenerID() {
 		return "demo";
@@ -57,14 +39,13 @@ public class DemoApp implements CommListener {
 
 	@Override
 	public void onMessage(CommandMessage msg) {
-		System.out.println("---> " + msg);
+		System.out.println("--> " + msg);
 	}
 
-	//upload file to server
+	//Push file to server
 	private void splitFileAndProcess(String fname){
 		mc.splitFileAndProcess(fname);
 	}
-
 
 	/**
 	 * sample application (client) use of our messaging service
@@ -80,9 +61,9 @@ public class DemoApp implements CommListener {
 			DemoApp da = new DemoApp(mc);
 			// do stuff w/ the connection
 			da.splitFileAndProcess(fname);
-			System.out.println("\n** exiting in 10 seconds. **");
+			System.out.println("\n** exiting in 20 seconds. **");
 			System.out.flush();
-			Thread.sleep(10 * 1000);
+			Thread.sleep(20000);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

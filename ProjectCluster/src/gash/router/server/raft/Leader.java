@@ -3,11 +3,11 @@ package gash.router.server.raft;
 import gash.router.server.edges.EdgeInfo;
 import pipe.work.Work.WorkMessage;
 
-public class LeaderNode implements NodeState {
+public class Leader implements ClassNode {
 
 	private RaftHandler handler;
 	
-	public LeaderNode(RaftHandler handler) {
+	public Leader(RaftHandler handler) {
 		this.handler = handler;
 	}
 	
@@ -44,17 +44,17 @@ public class LeaderNode implements NodeState {
 	}
 
 	@Override
-	public synchronized void processHandleAVoteFromFollower(WorkMessage wm) {
+	public synchronized void followerVote(WorkMessage wm) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public synchronized void processReplyAVoteToCandidate(WorkMessage wm) {
+	public synchronized void candidateRespondVote(WorkMessage wm) {
 		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public synchronized void processReplyHeartBeatToLeader(WorkMessage wm) {
+	public synchronized void leaderRespondHeartBeat(WorkMessage wm) {
 		// TODO Auto-generated method stub
 	}
 }

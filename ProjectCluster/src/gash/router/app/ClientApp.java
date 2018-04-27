@@ -54,9 +54,9 @@ public class ClientApp implements CommListener {
 	
 		do {
 			System.out.flush();
-	        System.out.print("\n\n----------------------------------------\n" +
+	        System.out.print("\n\n-------------------------------------\n" +
 	        				"Menu: Host: " + host + ":" + port 
-	        				+ "\n-----------------------------------------\n" +
+	        				+ "\n--------------------------------------\n" +
 	        				"* ping <node_id>\n" +
 	        				"* write <file_name>\n" +
 	                        "* read <file_name>\n" + 
@@ -64,8 +64,10 @@ public class ClientApp implements CommListener {
 	                        "> ");
 	        System.out.flush();
 	
-	        command = scanner.nextLine();
-	        commands = command.split("\\s+");
+			command = scanner.nextLine();
+			
+			commands = command.split("\\s+");
+			// Set selection
 	        switch(commands[0]) {
 	          	case "ping":
 	          		if(commands.length > 1)
@@ -73,6 +75,7 @@ public class ClientApp implements CommListener {
 	          		System.out.println("\nSyntax: ping <cluster_id>\n");
 	        	  	break;
 				case "leader":
+				
 					RedisDBServer.getInstance().getjedis().select(0);
 					String leader = RedisDBServer.getInstance().getjedis().get(""+RoutingConf.clusterId);
 					System.out.println("Cluster <" + ClientApp.connectedClusterId + "> has leader node <" + leader + ">");
@@ -93,7 +96,7 @@ public class ClientApp implements CommListener {
 	        }
 	      } while(!commands[0].equals("quit"));
 		
-		//close scanner
+		//close scanner command line
 		scanner.close();
   }
 
@@ -109,19 +112,25 @@ public class ClientApp implements CommListener {
 			String leader = RedisDBServer.getInstance().getjedis().get(connectedClusterId);
 			
 			if(leader != null) {
+
 				host = leader.split(":")[0];
 				port = Integer.parseInt(leader.split(":")[1]);
 			} else{
 				host = "localhost";
 				port = 5510;
 			}
+
 			try {
 				MessageClient mc = new MessageClient(host, port);
 				ClientApp ca = new ClientApp(mc);
+
 				ca.menu();
-				System.out.println("\n Exiting in 10 seconds.");
+
+				System.out.println("\n Exiting in 20 seconds.");
+
 				System.out.flush();
-				Thread.sleep(10 * 1000);
+				Thread.sleep(20000);
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {

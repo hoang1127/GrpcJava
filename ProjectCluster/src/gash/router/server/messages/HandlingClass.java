@@ -193,7 +193,7 @@ public class HandlingClass implements Session, Runnable{
     	    		int chunkId = wb.getChunk().getChunkId();
     	    		int nodeId = msg.getHeader().getNodeId();
     	    		
-            		if(conf.getNodeId() == RaftHandler.getInstance().getLeaderNodeId()) {
+            		if(conf.getNodeId() == RaftHandler.getInstance().getLearderId()) {
             			//add into channels table
     					if (!saveDB.checkFileChunkExist(fname, chunkId)) {
     						//if it is not write before
