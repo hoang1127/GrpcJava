@@ -6,86 +6,84 @@ import pipe.work.Work.WorkMessage;
 
 public class Candidate implements ClassNode {
 
-	private RaftHandler handler;
-	private int numOfNodesActive = 1;
-
-	private int numOfVote = 1; //For itself
-	private boolean isAskedForVote = false;
-	
+	private boolean voteAsked = false;
+	private int voteNum = 1; 
+	private int activeNodeNum = 1;
+	private RaftHandler raft_handler;
 	
 	public Candidate(RaftHandler handler) {
-		this.handler = handler;
+		this.raft_handler = handler;
 	}
 	
 	public synchronized RaftHandler getHandler() {
-		return this.handler;
+		return this.raft_handler;
 	}
 		
 	@Override
 	public synchronized void init() {
-		// TODO Auto-generated method stub
+		System.out.println("Init . . .");
 	}
 
 	@Override
 	public synchronized void run() {
 		
 		try {
-			if (this.handler.getNodeMode() == 2) {
+			if (this.raft_handler.getNodeMode() == 2) {
 				
-				if (this.handler.getTimeout() <= 0) {
-					this.handler.setRandomTimeout();
-					this.handler.decreaseTerm();
+				if (this.raft_handler.getTimeout() <= 0) {
+					this.raft_handler.setRandomTimeout();
+					this.raft_handler.decreaseTerm();
 
-					System.out.println("Node " + this.handler.getNodeId() + " - " + "Timeout! Back to FOLLOWER");
-					this.handler.setNodeState(this.handler.follower, 1);
-					isAskedForVote = false;
+					System.out.println("Node " + this.raft_handler.getNodeId() + " - " + "Timeout Go back to the Follower !");
+					this.raft_handler.setNodeState(this.raft_handler.follower, 1);
+					voteAsked = false;
 					return;
 				}
 				
 				//update total count for active nodes
-				numOfNodesActive = 1;
-				for (EdgeInfo ei:this.handler.getEdgeMonitor().getOutboundEdges().getMap().values()) {
+				activeNodeNum = 1;
+				for (EdgeInfo ei:this.raft_handler.getEdgeMonitor().getOutboundEdges().getMap().values()) {
 					if (ei.isActive() && ei.getChannel().isActive()) {
-						numOfNodesActive++;
+						activeNodeNum++;
 					}
 				}
 				
 				//Nobody in the network, voted for itself to become leader
-				if (numOfNodesActive == 1) {
-					this.handler.setLearderId(this.handler.getNodeId());
-					this.handler.setRandomTimeout();
-					this.handler.increaseTerm();
+				if (activeNodeNum == 1) {
+					this.raft_handler.setLearderId(this.raft_handler.getNodeId());
+					this.raft_handler.setRandomTimeout();
+					this.raft_handler.increaseTerm();
 
-					System.out.println("Node " + this.handler.getNodeId() + " - " +  "Become LEADER in term " + this.handler.getTerm());
-					isAskedForVote = false;
-					this.handler.setNodeState(this.handler.leader, 3);
+					System.out.println("Node " + this.raft_handler.getNodeId() + " - " +  "Become The Leader in the term " + this.raft_handler.getTerm());
+					voteAsked = false;
+					this.raft_handler.setNodeState(this.raft_handler.leader, 3);
 					udpateRedis();
 					return;
 					
 				} else {
 					// Vote request to all follower
-					if (!isAskedForVote) {
-						System.out.println("Candidate node " + this.handler.getNodeId() + " is requesting vote to all followers");
-						this.handler.increaseTerm();
+					if (!voteAsked) {
+						System.out.println("The candidate node " + this.raft_handler.getNodeId() + " send a request vote to all of followers");
+						this.raft_handler.increaseTerm();
 
-						System.out.println("Active nodes = " + numOfNodesActive);
-						numOfVote = 1;
-
-						System.out.println("Candidate node " + this.handler.getNodeId() + " voted for itself");
+						System.out.println("The active nodes = " + activeNodeNum);
+						voteNum = 1;
+						System.out.println("The candidate node " + this.raft_handler.getNodeId() + " has voted for its own");
 						
-						for (EdgeInfo ei:this.handler.getEdgeMonitor().getOutboundEdges().getMap().values()) {			
-							if (ei.isActive() && ei.getChannel().isActive()) {		
-								ei.getChannel().writeAndFlush(MessageUtil.candidateAskToVote(handler));
-								System.out.println("Candidate is sending a vote request to node " + ei.getRef());
+						for (EdgeInfo ei:this.raft_handler.getEdgeMonitor().getOutboundEdges().getMap().values()) {			
+							if (ei.getChannel().isActive() && ei.isActive() ) {	
+
+								ei.getChannel().writeAndFlush(MessageUtil.candidateAskToVote(raft_handler));
+								System.out.println("The Candidate has sended a vote request to the node " + ei.getRef());
 							}
 						}
-						isAskedForVote = true;
+						voteAsked = true;
 					}
 				}
 			}
-			Thread.sleep(200);
-			int dt = this.handler.getTimeout() - (int)(System.currentTimeMillis() - this.handler.getTimerStart());
-			this.handler.setTimeout(dt);
+			Thread.sleep(300);
+			
+			this.raft_handler.setTimeout(this.raft_handler.getTimeout() - (int)(System.currentTimeMillis() - this.raft_handler.getTimerStart()));
 			return;
 			
 		} catch (Exception e) {
@@ -95,26 +93,27 @@ public class Candidate implements ClassNode {
 
 	@Override
 	public synchronized void candidateRespondVote(WorkMessage wm) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void followerVote(WorkMessage wm) {
 
-		if (this.handler.getNodeMode() == 2) {
-			System.out.println("Node " + this.handler.getNodeId() + " - " + "Get voted from node "+  wm.getAVote().getVoterID() + " voted for node");
-			numOfVote++;
+		if (this.raft_handler.getNodeMode() == 2) {
+			System.out.println("Node " + this.raft_handler.getNodeId() + " - " + "Get vote from the node "+  wm.getAVote().getVoterID() + " voted for the node");
+			voteNum++;
 			
-			System.out.println("Node " + this.handler.getNodeId() + " - " + "Current voted = " + numOfVote + "/" + numOfNodesActive + " active nodes, needs " + (1+(numOfNodesActive/2)) + " votes to become LEADER");
-			if (numOfVote >= (numOfNodesActive / 2)) {
-				this.handler.setRandomTimeout();
+			System.out.println("Node " + this.raft_handler.getNodeId() + " - " + "The current voted = " + voteNum + "/" + activeNodeNum + " the active nodes, required " + (1+(activeNodeNum/2)) + " votes to become LEADER");
+			// Accepted the votes with more then a half of it good.
+			if (voteNum >= (activeNodeNum / 2)) {
+				this.raft_handler.setRandomTimeout();
 
-				System.out.println("Node " + this.handler.getNodeId() + " - " +  " become LEADER in term " + this.handler.getTerm());
-				this.handler.setLearderId(this.handler.getNodeId());
-				this.handler.setNodeState(this.handler.leader, 3);
+				System.out.println("The Node " + this.raft_handler.getNodeId() + " - " +  " become LEADER in term " + this.raft_handler.getTerm());
+				this.raft_handler.setLearderId(this.raft_handler.getNodeId());
+				this.raft_handler.setNodeState(this.raft_handler.leader, 3);
 				udpateRedis();
 
-				isAskedForVote = false;
+				voteAsked = false;
 			}
 		}
 	}
@@ -122,9 +121,9 @@ public class Candidate implements ClassNode {
 	public synchronized void udpateRedis() {
 		//Update redis the leader node
 		RedisDBServer.getInstance().getjedis().select(0);
-		String host = handler.getHost();
+		String host = raft_handler.getHost();
 
-		int commandPort = handler.getServerState().getConf().getCommandPort();
+		int commandPort = raft_handler.getServerState().getConf().getCommandPort();
 		RedisDBServer.getInstance().getjedis().set(String.valueOf(gash.router.container.RoutingConf.clusterId), host +":" + commandPort);
 		System.out.println("- Redis updated -");
 	}
@@ -132,17 +131,17 @@ public class Candidate implements ClassNode {
 	@Override
 	public synchronized void leaderRespondHeartBeat(WorkMessage wm) {
 
-		if (this.handler.getNodeMode() == 2) {
-			this.handler.setRandomTimeout();
-			System.out.println("Node " + this.handler.getNodeId() + " - " + "Heartbeat from the Leader: "+ wm.getLeader().getLeaderId());
+		if (this.raft_handler.getNodeMode() == 2) {
+			this.raft_handler.setRandomTimeout();
+			System.out.println("Node " + this.raft_handler.getNodeId() + " - " + "Heartbeat from the Leader: "+ wm.getLeader().getLeaderId());
 			
-			this.handler.setLastKnownBeat(System.currentTimeMillis());
-			this.handler.setLearderId(wm.getLeader().getLeaderId());
-			this.handler.setTerm(wm.getLeader().getLeaderTerm());
+			this.raft_handler.setLastKnownBeat(System.currentTimeMillis());
+			this.raft_handler.setLearderId(wm.getLeader().getLeaderId());
+			this.raft_handler.setTerm(wm.getLeader().getLeaderTerm());
 
-			this.handler.setNodeState(this.handler.follower, 1);
+			this.raft_handler.setNodeState(this.raft_handler.follower, 1);
 
-			isAskedForVote = false;
+			voteAsked = false;
 		}
 	}
 }
