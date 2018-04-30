@@ -40,7 +40,7 @@ mysql> create database FileDatabase;
 
 7. Run client: 
 
-	./client.sh <cluster name>
+	./client.sh cluster name
 
         Ex. For cluster 1: ./client.sh 1
 
