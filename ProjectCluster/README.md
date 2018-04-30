@@ -38,9 +38,9 @@ mysql> create database FileDatabase;
 
         Ex. For node 2:   ./server.sh config/node2.conf 
 
-7. Run client: 
+7. Run client:
 
-	./client.sh <fileName> cluster name
+	./client.sh <cluster name> cluster name
 
         Ex. For cluster 1: ./client.sh 1
 
