@@ -68,11 +68,11 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
 		try {
 			// TODO How can you implement this without if-else statements?
 			if (msg.hasPing()) {
-				logger.info("Received a PING message.");
-				logger.info("Node ID = " + msg.getHeader().getNodeId());
-				logger.info("Destination ID = " + msg.getHeader().getDestination());
+				logger.info("PING message received.");
+				logger.info("NodeID = " + msg.getHeader().getNodeId());
+				logger.info("Destination NodeID = " + msg.getHeader().getDestination());
 				int nodeId = msg.getHeader().getNodeId();
-					//add into channels table
+					
 				if (nodeId > 10) {
 					//save client channel
 					if ((msg.getHeader().getNodeId() % 10) == RoutingConf.clusterId) {
@@ -116,7 +116,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
 			}
 
 		} catch (Exception e) {
-			// TODO add logging
+
 			Failure.Builder eb = Failure.newBuilder();
 			eb.setId(conf.getNodeId());
 			eb.setRefId(msg.getHeader().getNodeId());
