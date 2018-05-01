@@ -3,21 +3,21 @@ package gash.router.redis;
 import gash.router.container.RoutingConf;
 import redis.clients.jedis.Jedis;
 
-public class RedisDBServer {
+public class RedisDatabaseServer {
 
     private Jedis jedis;
-    private static RedisDBServer instanceRedis;
+    private static RedisDatabaseServer instanceRedis;
 
-    private RedisDBServer(){
+    private RedisDatabaseServer(){
 
         this.jedis = new Jedis(RoutingConf.redis, 6379);
     }
 
-    public static RedisDBServer getInstance(){
+    public static RedisDatabaseServer getInstance(){
 
         if(instanceRedis == null){
 
-            instanceRedis = new RedisDBServer();
+            instanceRedis = new RedisDatabaseServer();
         }
         return instanceRedis;
     }

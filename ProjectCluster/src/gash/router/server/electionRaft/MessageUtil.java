@@ -2,7 +2,7 @@
  * MessageUtil.java
 */
 
-package gash.router.server.raft;
+package gash.router.server.electionRaft;
 
 import java.net.UnknownHostException;
 import java.util.ArrayList;

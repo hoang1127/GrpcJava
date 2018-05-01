@@ -1,4 +1,4 @@
-package gash.router.server.raft;
+package gash.router.server.electionRaft;
 
 import pipe.work.Work.WorkMessage;
 

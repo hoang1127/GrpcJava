@@ -1,6 +1,6 @@
-package gash.router.server.raft;
+package gash.router.server.electionRaft;
 
-import gash.router.redis.RedisDBServer;
+import gash.router.redis.RedisDatabaseServer;
 import gash.router.server.edges.EdgeInfo;
 import pipe.work.Work.WorkMessage;
 
@@ -21,7 +21,7 @@ public class Candidate implements ClassNode {
 		
 	@Override
 	public synchronized void init() {
-		System.out.println("Init . . .");
+		System.out.println("Init . .");
 	}
 
 	@Override
@@ -120,11 +120,11 @@ public class Candidate implements ClassNode {
 
 	public synchronized void udpateRedis() {
 		//Update redis the leader node
-		RedisDBServer.getInstance().getjedis().select(0);
+		RedisDatabaseServer.getInstance().getjedis().select(0);
 		String host = raft_handler.getHost();
 
 		int commandPort = raft_handler.getServerState().getConf().getCommandPort();
-		RedisDBServer.getInstance().getjedis().set(String.valueOf(gash.router.container.RoutingConf.clusterId), host +":" + commandPort);
+		RedisDatabaseServer.getInstance().getjedis().set(String.valueOf(gash.router.container.RoutingConf.clusterId), host +":" + commandPort);
 		System.out.println("- Redis updated -");
 	}
 	

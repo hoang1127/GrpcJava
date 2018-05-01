@@ -75,7 +75,7 @@ public class CommConnection {
 	}
 
 	public static CommConnection getInstance() {
-		// TODO throw exception if not initialized!
+		
 		return instance.get();
 	}
 

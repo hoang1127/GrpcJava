@@ -20,7 +20,7 @@ import gash.router.client.CommListener;
 import gash.router.client.MessageClient;
 import gash.router.container.RoutingConf;
 import routing.Pipe.CommandMessage;
-import gash.router.redis.RedisDBServer;
+import gash.router.redis.RedisDatabaseServer;
 
 import java.util.Scanner;
 
@@ -76,8 +76,8 @@ public class ClientApp implements CommListener {
 	        	  	break;
 				case "leader":
 				
-					RedisDBServer.getInstance().getjedis().select(0);
-					String leader = RedisDBServer.getInstance().getjedis().get(""+RoutingConf.clusterId);
+					RedisDatabaseServer.getInstance().getjedis().select(0);
+					String leader = RedisDatabaseServer.getInstance().getjedis().get(""+RoutingConf.clusterId);
 					System.out.println("Cluster <" + ClientApp.connectedClusterId + "> has leader node <" + leader + ">");
 					break;
 	          	case "read" :
@@ -108,8 +108,8 @@ public class ClientApp implements CommListener {
 		
 		if (args.length > 0) {
 			connectedClusterId = args[0];
-			RedisDBServer.getInstance().getjedis().select(0);
-			String leader = RedisDBServer.getInstance().getjedis().get(connectedClusterId);
+			RedisDatabaseServer.getInstance().getjedis().select(0);
+			String leader = RedisDatabaseServer.getInstance().getjedis().get(connectedClusterId);
 			
 			if(leader != null) {
 

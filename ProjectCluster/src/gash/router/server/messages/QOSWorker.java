@@ -4,7 +4,7 @@ import gash.router.server.edges.EdgeInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import gash.router.server.raft.RaftHandler;
+import gash.router.server.electionRaft.RaftHandler;
 import pipe.common.Common;
 import pipe.work.Work;
 

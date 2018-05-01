@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
 
 import gash.router.container.RoutingConf;
 import gash.router.container.RoutingConf.RoutingEntry;
-import gash.router.redis.RedisDBServer;
+import gash.router.redis.RedisDatabaseServer;
 import gash.router.server.ServerState;
 import gash.router.server.WorkInit;
-import gash.router.server.raft.MessageUtil;
+import gash.router.server.electionRaft.MessageUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -81,7 +81,7 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 			try {
 				//set channel to next cluster's leader
 				if (ServerState.nextCluster == null || !ServerState.nextCluster.isActive()) {
-					Set<String> list = RedisDBServer.getInstance().getjedis().keys("*");
+					Set<String> list = RedisDatabaseServer.getInstance().getjedis().keys("*");
 					
 					//set next cluster
 					int nextClusterId = RoutingConf.clusterId + 1;
@@ -89,8 +89,8 @@ public class EdgeMonitor implements EdgeListener, Runnable {
 						nextClusterId = 1;
 					}
 
-					RedisDBServer.getInstance().getjedis().select(0);
-					String leader = RedisDBServer.getInstance().getjedis().get(String.valueOf(nextClusterId));
+					RedisDatabaseServer.getInstance().getjedis().select(0);
+					String leader = RedisDatabaseServer.getInstance().getjedis().get(String.valueOf(nextClusterId));
 					String host;
 					int port;
 					if(leader != null) {

@@ -1,4 +1,4 @@
-package gash.router.server.raft;
+package gash.router.server.electionRaft;
 
 
 import gash.router.server.edges.EdgeInfo;

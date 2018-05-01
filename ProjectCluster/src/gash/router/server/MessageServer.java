@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import gash.router.container.RoutingConf;
 import gash.router.server.edges.EdgeMonitor;
-import gash.router.server.raft.RaftHandler;
+import gash.router.server.electionRaft.RaftHandler;
 import gash.router.server.tasks.NoOpBalancer;
 import gash.router.server.tasks.TaskList;
 import gash.router.server.storage.SaveDB;

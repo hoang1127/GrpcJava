@@ -4,11 +4,11 @@ import io.netty.channel.Channel;
 import gash.router.container.RoutingConf;
 import gash.router.server.CommandHandler;
 import gash.router.server.ServerState;
-import gash.router.server.raft.RaftHandler;
+import gash.router.server.electionRaft.RaftHandler;
 import gash.router.server.storage.ChunkFileClass;
 import gash.router.server.storage.SaveDB;
 import gash.router.server.edges.EdgeInfo;
-import gash.router.server.raft.MessageUtil;
+import gash.router.server.electionRaft.MessageUtil;
 
 
 import org.slf4j.Logger;
