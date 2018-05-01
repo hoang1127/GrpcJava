@@ -30,7 +30,7 @@ import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.electionRaft.RaftHandler;
 import gash.router.server.tasks.NoOpBalancer;
 import gash.router.server.tasks.TaskList;
-import gash.router.server.storage.SaveDB;
+import gash.router.server.DatabaseHandling.SaveDB;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;

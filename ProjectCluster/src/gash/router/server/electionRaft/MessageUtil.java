@@ -10,7 +10,7 @@ import java.util.Hashtable;
 
 import com.google.protobuf.ByteString;
 
-import gash.router.server.storage.ChunkFileClass;
+import gash.router.server.DatabaseHandling.ChunkFileClass;
 import pipe.common.Common.Chunk;
 import pipe.common.Common.ChunkLocation;
 import pipe.common.Common.Header;

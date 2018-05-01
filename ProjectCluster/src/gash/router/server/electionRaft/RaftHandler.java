@@ -55,7 +55,7 @@ public class RaftHandler implements Runnable {
 	
 	public void init() {
 		try {	
-			leader = new Leader(this);
+			leader = new LeaderNode(this);
 			candidate = new Candidate(this);
 			follower = new Follower(this);
 			

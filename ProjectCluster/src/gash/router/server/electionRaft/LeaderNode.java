@@ -3,11 +3,11 @@ package gash.router.server.electionRaft;
 import gash.router.server.edges.EdgeInfo;
 import pipe.work.Work.WorkMessage;
 
-public class Leader implements ClassNode {
+public class LeaderNode implements ClassNode {
 
 	private RaftHandler handler;
 	
-	public Leader(RaftHandler handler) {
+	public LeaderNode(RaftHandler handler) {
 		this.handler = handler;
 	}
 	
@@ -24,7 +24,7 @@ public class Leader implements ClassNode {
 	@Override
 	public synchronized void run() {
 		
-		System.out.println("The Node " + this.handler.getNodeId() + " - " + "Leader Mode, term = " + this.handler.getTerm());
+		System.out.println("The Node " + this.handler.getNodeId() + " - " + "LeaderNode Mode, term = " + this.handler.getTerm());
 		try {
 			if (this.handler.getNodeMode() == 3) {
 		 		for (EdgeInfo ei:this.handler.getEdgeMonitor().getOutboundEdges().getMap().values()) {

@@ -50,7 +50,7 @@ public class CommHandler extends SimpleChannelInboundHandler<CommandMessage> {
 	protected ServerState state;
 	protected ConcurrentMap<String, CommListener> listeners = new ConcurrentHashMap<String, CommListener>();
 	//private volatile Channel channel;
-	MergeWorker mergeWorker;
+	WorkerMerging WorkerMerging;
 
 	public CommHandler() {
      System.out.println("CommHandler Init");
@@ -107,13 +107,13 @@ public class CommHandler extends SimpleChannelInboundHandler<CommandMessage> {
 					//second response from server
 					logger.info("Begin to merge chunks....");
 					Common.Chunk chunk = msg.getResponse().getReadResponse().getChunk();
-					MergeWorker.upDateTable(chunk);
+					WorkerMerging.upDateTable(chunk);
 					return;
 					
 				} else {
 					int numChunks = msg.getResponse().getReadResponse().getNumOfChunks();
-					mergeWorker = MergeWorker.getMergeWorkerInstance();
-					mergeWorker.setTotalChunks(numChunks);
+					WorkerMerging = WorkerMerging.getworkerMerginngInstance();
+					WorkerMerging.setTotalChunks(numChunks);
 					
 					// get the HashMap<chunkID, Location> from the readResponse.
 					List<Common.ChunkLocation> list = msg.getResponse().getReadResponse().getChunkLocationList();

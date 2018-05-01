@@ -1,5 +1,5 @@
 /**
- * MergeWorker.java
+ * WorkerMerging.java
  */
 
 package gash.router.client;
@@ -16,27 +16,27 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 
-public class MergeWorker implements Runnable{
-	protected static Logger logger = LoggerFactory.getLogger("MergeWorker");
+public class WorkerMerging implements Runnable{
+	protected static Logger logger = LoggerFactory.getLogger("WorkerMerging");
     private int totalChunks;
     private static HashMap<Integer,byte[]> chunkIdDataMap;
     private static HashSet<Integer> chunkIdSet;
     public int num;
-    protected static MergeWorker mergeWorker;
+    protected static WorkerMerging workerMerging;
     public boolean successMerge = false;
     public static final Object usageLock = new Object();
     private int currentChunkId = 0;
     byte[] file = new byte[0];
     String filename;
 
-    public static MergeWorker getMergeWorkerInstance(){
-        if(mergeWorker == null)
-            mergeWorker = new MergeWorker();
-        return mergeWorker;
+    public static WorkerMerging getworkerMerginngInstance(){
+        if(workerMerging == null)
+            workerMerging = new WorkerMerging();
+        return workerMerging;
     }
 
-    public MergeWorker() {
-        mergeWorker = this;
+    public WorkerMerging() {
+        workerMerging = this;
 
         chunkIdDataMap = new HashMap<Integer, byte[]>();
         chunkIdSet = new HashSet<Integer>();

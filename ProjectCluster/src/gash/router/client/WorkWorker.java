@@ -5,13 +5,13 @@ import pipe.work.Work.WorkMessage;
 
 
 public class WorkWorker extends Thread{
-    private WorkConnection conn;
-    private boolean forever = true;
+    private WorkConnection connection;
+    private boolean isRunning = true;
 
-    public WorkWorker(WorkConnection conn) {
-        this.conn = conn;
+    public WorkWorker(WorkConnection _connection) {
+        this.connection = _connection;
 
-        if (conn.outbound == null)
+        if (connection.outbound == null)
             throw new RuntimeException("connection worker detected null queue");
     }
 
@@ -20,24 +20,23 @@ public class WorkWorker extends Thread{
         System.out.println("--> starting WorkWorker thread");
         System.out.flush();
 
-        Channel ch = conn.connect();
+        Channel ch = connection.connect();
         if (ch == null || !ch.isOpen() || !ch.isActive()) {
             WorkConnection.logger.error("connection missing, no outbound communication");
             return;
         }
 
         while (true) {
-            if (!forever && conn.outbound.size() == 0)
+            if (!isRunning && connection.outbound.size() == 0)
                 break;
 
             try {
-                // block until a message is enqueued AND the outgoing
-                // channel is active
-                WorkMessage msg = conn.outbound.take();
+                // Set block as long as the message is not enqueued and the channel is not active
+                WorkMessage msg = connection.outbound.take();
                 System.out.println("--> Channel: WorkWorker is going to write message. ");
                 if (ch.isWritable()) {
-                    if (!conn.write(msg)) {
-                        conn.outbound.putFirst(msg);
+                    if (!connection.write(msg)) {
+                        connection.outbound.putFirst(msg);
                     }
 
                     System.out.flush();
@@ -51,13 +50,13 @@ public class WorkWorker extends Thread{
                 ie.printStackTrace();
                 break;
             } catch (Exception e) {
-                WorkConnection.logger.error("Unexpected communcation failure", e);
+                WorkConnection.logger.error("Unexpected communcation is failed", e);
                 break;
             }
         }
 
-        if (!forever) {
-            WorkConnection.logger.info("connection queue closing");
+        if (!isRunning) {
+            WorkConnection.logger.info("connection queue is closing");
         }
     }
 }

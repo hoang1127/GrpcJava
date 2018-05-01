@@ -1,7 +1,7 @@
 /**
  * TestSQLOperations.java
  */
-package gash.router.server.storage;
+package gash.router.server.DatabaseHandling;
 
 
 public class TestSQLOperations {

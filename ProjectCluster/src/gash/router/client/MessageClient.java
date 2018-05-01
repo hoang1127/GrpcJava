@@ -39,7 +39,7 @@ import java.io.FileInputStream;
 public class MessageClient {
 	protected static Logger logger = LoggerFactory.getLogger("client");
 	// track requests
-	private MergeWorker mw = null;
+	private WorkerMerging mw = null;
 
 	public MessageClient(String host, int port) {
 		init(host, port);
@@ -48,7 +48,7 @@ public class MessageClient {
 	private void init(String host, int port) {
 		CommConnection.initConnection(host, port);
 		logger.info("MessageClient init host: " + host + " port: " + port);
-		this.mw = new MergeWorker();
+		this.mw = new WorkerMerging();
 	}
 
 	public void addListener(CommListener listener) {

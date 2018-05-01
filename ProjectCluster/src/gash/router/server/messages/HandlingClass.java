@@ -5,8 +5,8 @@ import gash.router.routingConfiguration.RoutingConf;
 import gash.router.server.CommandHandler;
 import gash.router.server.ServerState;
 import gash.router.server.electionRaft.RaftHandler;
-import gash.router.server.storage.ChunkFileClass;
-import gash.router.server.storage.SaveDB;
+import gash.router.server.DatabaseHandling.ChunkFileClass;
+import gash.router.server.DatabaseHandling.SaveDB;
 import gash.router.server.edges.EdgeInfo;
 import gash.router.server.electionRaft.MessageUtil;
 

@@ -2,7 +2,7 @@
  * SaveDB.java
  */
 
-package gash.router.server.storage;
+package gash.router.server.DatabaseHandling;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
