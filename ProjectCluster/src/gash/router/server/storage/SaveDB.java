@@ -7,7 +7,7 @@ package gash.router.server.storage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gash.router.container.RoutingConf;
+import gash.router.routingConfiguration.RoutingConf;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;

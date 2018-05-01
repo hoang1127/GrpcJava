@@ -124,7 +124,7 @@ public class Candidate implements ClassNode {
 		String host = raft_handler.getHost();
 
 		int commandPort = raft_handler.getServerState().getConf().getCommandPort();
-		RedisDatabaseServer.getInstance().getjedis().set(String.valueOf(gash.router.container.RoutingConf.clusterId), host +":" + commandPort);
+		RedisDatabaseServer.getInstance().getjedis().set(String.valueOf(gash.router.routingConfiguration.RoutingConf.clusterId), host +":" + commandPort);
 		System.out.println("- Redis updated -");
 	}
 	

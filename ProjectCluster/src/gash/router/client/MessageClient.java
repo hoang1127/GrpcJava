@@ -17,7 +17,7 @@ package gash.router.client;
 
 
 import gash.router.app.ClientApp;
-import gash.router.container.RoutingConf;
+import gash.router.routingConfiguration.RoutingConf;
 import gash.router.server.electionRaft.MessageUtil;
 
 import org.slf4j.Logger;

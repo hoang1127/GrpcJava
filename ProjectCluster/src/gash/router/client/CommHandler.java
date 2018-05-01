@@ -15,7 +15,7 @@
  */
 package gash.router.client;
 
-import gash.router.container.RoutingConf;
+import gash.router.routingConfiguration.RoutingConf;
 import gash.router.server.PrintUtil;
 import gash.router.server.ServerState;
 import gash.router.server.electionRaft.MessageUtil;

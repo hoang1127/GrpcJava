@@ -1,7 +1,7 @@
 package gash.router.server.messages;
 
 import io.netty.channel.Channel;
-import gash.router.container.RoutingConf;
+import gash.router.routingConfiguration.RoutingConf;
 import gash.router.server.CommandHandler;
 import gash.router.server.ServerState;
 import gash.router.server.electionRaft.RaftHandler;

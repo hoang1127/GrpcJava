@@ -18,7 +18,7 @@ package gash.router.app;
 import gash.router.client.CommConnection;
 import gash.router.client.CommListener;
 import gash.router.client.MessageClient;
-import gash.router.container.RoutingConf;
+import gash.router.routingConfiguration.RoutingConf;
 import routing.Pipe.CommandMessage;
 import gash.router.redis.RedisDatabaseServer;
 

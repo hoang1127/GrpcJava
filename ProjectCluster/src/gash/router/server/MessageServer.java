@@ -25,7 +25,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gash.router.container.RoutingConf;
+import gash.router.routingConfiguration.RoutingConf;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.electionRaft.RaftHandler;
 import gash.router.server.tasks.NoOpBalancer;
@@ -178,8 +178,10 @@ public class MessageServer {
 
 				logger.info(f.channel().localAddress() + " -> open: " + f.channel().isOpen() + ", write: "
 						+ f.channel().isWritable() + ", act: " + f.channel().isActive());
-
-				// block until the server socket is closed.
+				logger.info("Wait . . .");
+				logger.info("Starting soon . . . for leader");
+						
+				// until server socket is close. Remaind blocked
 				f.channel().closeFuture().sync();
 
 			} catch (Exception ex) {
@@ -255,6 +257,7 @@ public class MessageServer {
 				logger.info(f.channel().localAddress() + " -> open: " + f.channel().isOpen() + ", write: "
 						+ f.channel().isWritable() + ", act: " + f.channel().isActive());
 
+				
 				// block until the server socket is closed.
 				f.channel().closeFuture().sync();
 

@@ -146,7 +146,7 @@ public class WorkConnection {
 
             System.out.println(channel.channel().localAddress() + " -> open: " + channel.channel().isOpen()
                     + ", write: " + channel.channel().isWritable() + ", reg: " + channel.channel().isRegistered());
-
+          
         } catch (Throwable ex) {
             logger.error("failed to initialize the client connection", ex);
             ex.printStackTrace();

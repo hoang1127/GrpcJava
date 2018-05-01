@@ -2,7 +2,7 @@ package gash.router.server;
 
 import java.util.Hashtable;
 
-import gash.router.container.RoutingConf;
+import gash.router.routingConfiguration.RoutingConf;
 import gash.router.server.edges.EdgeMonitor;
 import gash.router.server.electionRaft.RaftHandler;
 import gash.router.server.tasks.TaskList;
